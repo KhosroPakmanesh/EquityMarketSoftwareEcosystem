@@ -1,3 +1,6 @@
+//Reference:
+//https://github.com/Apress/practical-.net-for-financial-markets/blob/master/CodeExample/Chpt2/Framework/PriceTimePriority.cs
+
 package emSeco.exchangeUnit.core.modules.orderComparator.implementations;
 
 import com.google.inject.Inject;
@@ -37,7 +40,8 @@ public class OrderComparator implements Comparator<Order>, IOrderComparator {
 
     private int CompareOrders(Order baseOrder, Order otherOrder, int sortingOrder)
     {
-        int priceComparisonResult = Double.compare(baseOrder.getTerm().getPrice(),otherOrder.getTerm().getPrice());
+        int priceComparisonResult = Double.compare
+                (baseOrder.getTerm().getPrice(),otherOrder.getTerm().getPrice());
         if ( priceComparisonResult != 0 )
         {
             return priceComparisonResult * sortingOrder;

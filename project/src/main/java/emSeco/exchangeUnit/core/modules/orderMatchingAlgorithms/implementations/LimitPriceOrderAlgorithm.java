@@ -1,3 +1,6 @@
+//Reference:
+//https://github.com/Apress/practical-.net-for-financial-markets/blob/master/CodeExample/Chpt2/Framework/EquityMatchingLogic.cs
+
 package emSeco.exchangeUnit.core.modules.orderMatchingAlgorithms.implementations;
 
 //#if LimitPriceOrderAlgorithm

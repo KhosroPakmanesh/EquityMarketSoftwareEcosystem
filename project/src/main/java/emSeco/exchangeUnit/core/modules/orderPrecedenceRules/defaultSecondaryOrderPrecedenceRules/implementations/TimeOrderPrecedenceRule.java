@@ -1,3 +1,6 @@
+//Reference:
+//https://github.com/Apress/practical-.net-for-financial-markets/blob/master/CodeExample/Chpt2/Framework/PriceTimePriority.cs
+
 package emSeco.exchangeUnit.core.modules.orderPrecedenceRules.defaultSecondaryOrderPrecedenceRules.implementations;
 
 //#if TimeOrderPrecedenceRule
