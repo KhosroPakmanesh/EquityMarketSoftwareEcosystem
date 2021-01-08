@@ -1,5 +1,6 @@
 /.idea/
 
+
 ##############################
 ## Java
 ##############################
@@ -11,9 +12,11 @@
 *.nar
 hs_err_pid*
 
+
 ##############################
 ## Maven
 ##############################
+/project/target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -24,10 +27,27 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
+
 ##############################
 ## IntelliJ
 ##############################
+/project/.idea/
+
 
 ##############################
 ## Eclipse
 ##############################
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath

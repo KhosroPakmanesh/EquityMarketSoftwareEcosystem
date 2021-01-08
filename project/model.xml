@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+	<properties>
+		<graphics key="legendposition" value="1033,43"/>
+		<graphics key="legendautolayout" value="true"/>
+		<graphics key="showshortnames" value="false"/>
+		<graphics key="layout" value="vertical"/>
+		<graphics key="showcollapsedconstraints" value="true"/>
+		<graphics key="legendhidden" value="false"/>
+		<graphics key="layoutalgorithm" value="6"/>
+	</properties>
+	<struct>
+		<and abstract="true" mandatory="true" name="EquityMarket">
+			<graphics key="collapsed" value="false"/>
+			<and abstract="true" mandatory="true" name="Custodian">
+				<graphics key="collapsed" value="true"/>
+				<and abstract="true" mandatory="true" name="CustodianAllocationDetailValidationRules">
+					<graphics key="collapsed" value="false"/>
+					<feature mandatory="true" name="CustodianAllocationDetailInformationValidation"/>
+					<feature mandatory="true" name="CustodianAllocationDetailsAgreement"/>
+					<feature mandatory="true" name="CustodianAllocationDetailTermInformationValidation"/>
+					<feature mandatory="true" name="CustodianAllocationDetailTradingInformationValidation"/>
+					<feature mandatory="true" name="CustodianAllocationDetailAccountsInformationValidation"/>
+				</and>
+				<and abstract="true" mandatory="true" name="AllocationDetailAffirmationRules">
+					<graphics key="collapsed" value="false"/>
+					<feature mandatory="true" name="ContractAllocationDetailInstrumentEquality"/>
+					<feature mandatory="true" name="ContractAllocationDetailPriceEquality"/>
+					<feature mandatory="true" name="ContractAllocationDetailQuantityEquality"/>
+				</and>
+				<and abstract="true" mandatory="true" name="CustodianEquityTransferMethods">
+					<graphics key="collapsed" value="false"/>
+					<feature mandatory="true" name="CustodianClearingBankAccountMoneyTransferMethod"/>
+					<feature name="CustodianInternalBankAccountMoneyTransferMethod"/>
+				</and>
+				<and abstract="true" mandatory="true" name="CustodianMoneyTransferMethods">
+					<graphics key="collapsed" value="false"/>
+					<feature mandatory="true" name="CustodianDepositoryDematAccountEquityTransferMethod"/>
+					<feature name="CustodianInternalDematAccountMoneyTransferMethod"/>
+				</and>
+			</and>
+			<and abstract="true" mandatory="true" name="Broker">
+				<graphics key="collapsed" value="true"/>
+				<alt abstract="true" mandatory="true" name="PortfolioOptimizationAlgorithms">
+					<feature name="FakePortfolioOptimizationAlgorithmNum1"/>
+					<feature name="FakePortfolioOptimizationAlgorithmNum2"/>
+				</alt>
+				<alt abstract="true" mandatory="true" name="BestVenueAnalysisAlgorithms">
+					<feature name="FakeBestVenueAnalysisAlgorithmNum1"/>
+					<feature name="FakeBestVenueAnalysisAlgorithmNum2"/>
+				</alt>
+				<and abstract="true" mandatory="true" name="ClientsOrderTypes">
+					<and mandatory="true" name="LimitPriceOrder">
+						<feature name="MarketPriceOrder"/>
+					</and>
+					<feature name="FakeFillOrKillOrder"/>
+					<feature name="FakeImmediateOrCancel"/>
+					<feature name="FakeAllOrNothing"/>
+					<feature name="FakeGoodTillCancelled"/>
+					<feature name="FakeGoodTillDate"/>
+					<feature name="FakeStopLoss"/>
+				</and>
+				<and abstract="true" mandatory="true" name="BrokerMoneyTransferMethods">
+					<feature mandatory="true" name="BrokerClearingBankAccountMoneyTransferMethod"/>
+					<feature name="BrokerInternalBankAccountMoneyTransferMethod"/>
+				</and>
+				<and abstract="true" mandatory="true" name="BrokerEquityTransferMethods">
+					<graphics key="collapsed" value="false"/>
+					<feature mandatory="true" name="BrokerDepositoryDematAccountEquityTransferMethod"/>
+					<feature name="BrokerInternalDematAccountMoneyTransferMethod"/>
+				</and>
+				<and abstract="true" mandatory="true" name="BrokerOrderValidationRules">
+					<and abstract="true" mandatory="true" name="BrokerInstitutionalOrderValidationRules">
+						<feature mandatory="true" name="BrokerInstitutionalOrderRoutingInformationValidation"/>
+						<feature mandatory="true" name="BrokerInstitutionalOrderTradingInformationValidation"/>
+					</and>
+					<and abstract="true" mandatory="true" name="BrokerRetailOrderValidationRules">
+						<feature mandatory="true" name="BrokerRetailOrderTradingInformationValidation"/>
+						<feature mandatory="true" name="BrokerRetailOrderAccountsInformationValidation"/>
+					</and>
+					<and abstract="true" mandatory="true" name="BrokerSharedOrderValidationRules">
+						<feature mandatory="true" name="BrokerSharedOrderRoutingInformationValidation"/>
+						<feature mandatory="true" name="BrokerSharedOrderTermInformationValidation"/>
+						<feature mandatory="true" name="BrokerSharedOrderTradingInformationValidation"/>
+						<feature mandatory="true" name="SharedOrderMoneyEquityTransferMethodValidation"/>
+					</and>
+				</and>
+				<and abstract="true" mandatory="true" name="OrderRisks">
+					<and abstract="true" mandatory="true" name="InstitutionalOrderRisks">
+						<feature mandatory="true" name="FakeInstitutionalOrderRiskNum1"/>
+						<feature mandatory="true" name="FakeInstitutionalOrderRiskNum2"/>
+					</and>
+					<and abstract="true" mandatory="true" name="RetailOrderRisks">
+						<graphics key="collapsed" value="false"/>
+						<feature mandatory="true" name="BalanceEquitySufficiency"/>
+						<feature mandatory="true" name="FakeRetailOrderRiskNum1"/>
+					</and>
+					<and abstract="true" mandatory="true" name="SharedOrderRisks">
+						<feature mandatory="true" name="FakeSharedOrderRiskNum1"/>
+						<feature mandatory="true" name="FakeSharedOrderRiskNum2"/>
+					</and>
+				</and>
+				<and abstract="true" mandatory="true" name="GovernmentalComplianceChecks">
+					<graphics key="collapsed" value="false"/>
+					<and abstract="true" mandatory="true" name="InstitutionalGovernmentalComplianceRules">
+						<feature mandatory="true" name="InstitutionalWashSaleRule"/>
+						<feature mandatory="true" name="FakeInstitutionalGovernmentalComplianceRuleNum1"/>
+					</and>
+					<and abstract="true" mandatory="true" name="RetailGovernmentalComplianceRules">
+						<feature mandatory="true" name="RetailWashSaleRule"/>
+						<feature mandatory="true" name="FakeRetailGovernmentalComplianceRuleNum1"/>
+					</and>
+					<and abstract="true" mandatory="true" name="SharedGovernmentalComplianceRules">
+						<feature mandatory="true" name="FakeSharedGovernmentalComplianceRuleNum1"/>
+						<feature mandatory="true" name="FakeSharedGovernmentalComplianceRuleNum2"/>
+					</and>
+				</and>
+				<and abstract="true" mandatory="true" name="ClientsComplianceChecks">
+					<and abstract="true" mandatory="true" name="InstitutionalClientComplianceRules">
+						<feature mandatory="true" name="FakeInstitutionalClientComplianceRuleNum1"/>
+						<feature mandatory="true" name="FakeInstitutionalClientComplianceRuleNum2"/>
+					</and>
+					<and abstract="true" mandatory="true" name="RetailClientComplianceRules">
+						<feature mandatory="true" name="FakeRetailClientComplianceRuleNum1"/>
+						<feature mandatory="true" name="FakeRetailClientComplianceRuleNum2"/>
+					</and>
+					<and abstract="true" mandatory="true" name="SharedClientComplianceRules">
+						<graphics key="collapsed" value="false"/>
+						<feature mandatory="true" name="NoSinStockRule"/>
+						<feature mandatory="true" name="FakeSharedClientComplianceRuleNum1"/>
+					</and>
+				</and>
+				<and abstract="true" mandatory="true" name="BrokerAllocationDetailValidationRules">
+					<feature mandatory="true" name="BrokerAllocationDetailInformationValidation"/>
+					<feature mandatory="true" name="BrokerAllocationDetailRoutingInformationValidation"/>
+					<feature mandatory="true" name="BrokerAllocationDetailTermInformationValidation"/>
+					<feature mandatory="true" name="BrokerAllocationDetailTradingInformationValidation"/>
+					<feature mandatory="true" name="BrokerAllocationDetailsAgreement"/>
+					<feature mandatory="true" name="BrokerTradesAndAllocationDetailsTotalPriceMatching"/>
+				</and>
+			</and>
+			<and abstract="true" mandatory="true" name="Exchange">
+				<graphics key="collapsed" value="true"/>
+				<and abstract="true" mandatory="true" name="ExchangeOrderValidationRules">
+					<and abstract="true" mandatory="true" name="ExchangeInstitutionalOrderValidationRules">
+						<feature mandatory="true" name="ExchangeInstitutionalOrderRoutingInformationValidation"/>
+						<feature mandatory="true" name="ExchangeInstitutionalOrderTradingInformationValidation"/>
+					</and>
+					<and abstract="true" mandatory="true" name="ExchangeRetailOrderValidationRules">
+						<feature mandatory="true" name="ExchangeRetailOrderAccountsInformationValidation"/>
+						<feature mandatory="true" name="ExchangeRetailOrderTradingInformationValidation"/>
+					</and>
+					<and abstract="true" mandatory="true" name="ExchangeSharedOrderValidationRules">
+						<feature mandatory="true" name="ExchangeSharedOrderRoutingInformationValidation"/>
+						<feature mandatory="true" name="ExchangeSharedOrderTermInformationValidation"/>
+						<feature mandatory="true" name="ExchangeSharedOrderTradingInformationValidation"/>
+					</and>
+				</and>
+				<alt abstract="true" mandatory="true" name="DefaultSecondaryOrderPrecedenceRules">
+					<feature name="TimeOrderPrecedenceRule"/>
+					<feature name="FakeDefaultSecondaryOrderPrecedenceRuleNum1"/>
+				</alt>
+				<alt abstract="true" name="SecondaryOrderPrecedenceRules">
+					<feature name="QuantityDisclosureOrderPrecedenceRule"/>
+					<feature name="SmallQuantityOrderPrecedenceRule"/>
+					<feature name="LargeQuantityOrderPrecedenceRule"/>
+				</alt>
+				<and abstract="true" mandatory="true" name="OrderMatchingAlgorithms">
+					<graphics key="collapsed" value="false"/>
+					<and mandatory="true" name="LimitPriceOrderAlgorithm">
+						<feature name="MarketPriceOrderAlgorithm"/>
+					</and>
+					<feature name="FakeFillOrKillOrderAlgorithm"/>
+					<feature name="FakeImmediateOrCancelAlgorithm"/>
+					<feature name="FakeAllOrNothingAlgorithm"/>
+					<feature name="FakeGoodTillCancelledAlgorithm"/>
+					<feature name="FakeGoodTillDateAlgorithm"/>
+					<feature name="FakeStopLossAlgorithm"/>
+				</and>
+			</and>
+			<and abstract="true" mandatory="true" name="ClearingCorporation">
+				<graphics key="collapsed" value="true"/>
+				<and abstract="true" mandatory="true" name="TradeClearingRules">
+					<graphics key="collapsed" value="false"/>
+					<and abstract="true" mandatory="true" name="TwoSideInstitutionalTradeClearingRules">
+						<feature mandatory="true" name="TwoSideInstitutionalAllocationDetailInformationEquality"/>
+						<feature mandatory="true" name="TwoSideInstitutionalTradingInformationEquality"/>
+					</and>
+					<and abstract="true" mandatory="true" name="OneSideInstitutionalTradeClearingRules">
+						<feature mandatory="true" name="OneSideInstitutionalAllocationDetailInformationEquality"/>
+						<feature mandatory="true" name="OneSideInstitutionalTradingInformationEquality"/>
+					</and>
+					<and abstract="true" mandatory="true" name="TwoSideRetailTradeClearingRules">
+						<feature mandatory="true" name="FakeTwoSideRetailTradeClearingRuleNum1"/>
+						<feature mandatory="true" name="FakeTwoSideRetailTradeClearingRuleNum2"/>
+					</and>
+					<and abstract="true" mandatory="true" name="SharedTradeClearingRules">
+						<graphics key="collapsed" value="false"/>
+						<feature mandatory="true" name="SharedExchangeInformationEquality"/>
+						<feature mandatory="true" name="SharedInitialOrderInformationEquality"/>
+						<feature mandatory="true" name="SharedOrderInitiatorsInequality"/>
+						<feature mandatory="true" name="SharedTradeTermEquality"/>
+					</and>
+				</and>
+				<and abstract="true" mandatory="true" name="TradeValidationRules">
+					<and abstract="true" mandatory="true" name="TwoSideInstitutionalTradeValidationRules">
+						<feature mandatory="true" name="TwoSideInstitutionalAllocationDetailInformationValidation"/>
+						<feature mandatory="true" name="TwoSideInstitutionalTradeAccountsInformationValidation"/>
+						<feature mandatory="true" name="TwoSideInstitutionalTradingInformationValidation"/>
+					</and>
+					<and abstract="true" mandatory="true" name="OneSideInstitutionalTradeValidationRules">
+						<feature mandatory="true" name="OneSideInstitutionalAllocationDetailInformationValidation"/>
+						<feature mandatory="true" name="OneSideInstitutionalTradeAccountsInformationValidation"/>
+						<feature mandatory="true" name="OneSideInstitutionalTradingInformationValidation"/>
+					</and>
+					<and abstract="true" mandatory="true" name="TwoSideRetailTradeValidationRules">
+						<feature mandatory="true" name="TwoSideRetailTradingInformationValidation"/>
+						<feature mandatory="true" name="TwoSideRetailTradeAccountsInformationValidation"/>
+					</and>
+					<and abstract="true" mandatory="true" name="SharedTradeValidationRules">
+						<feature mandatory="true" name="SharedTradeRoutingInformationValidation"/>
+						<feature mandatory="true" name="SharedTradeTermInformationValidation"/>
+					</and>
+				</and>
+			</and>
+		</and>
+	</struct>
+	<constraints>
+		<rule>
+			<imp>
+				<var>LimitPriceOrder</var>
+				<var>LimitPriceOrderAlgorithm</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>MarketPriceOrder</var>
+				<var>MarketPriceOrderAlgorithm</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>FakeFillOrKillOrder</var>
+				<var>FakeFillOrKillOrderAlgorithm</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>FakeImmediateOrCancel</var>
+				<var>FakeImmediateOrCancelAlgorithm</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>FakeAllOrNothing</var>
+				<var>FakeAllOrNothingAlgorithm</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>FakeGoodTillCancelled</var>
+				<var>FakeGoodTillCancelledAlgorithm</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>FakeGoodTillDate</var>
+				<var>FakeGoodTillDateAlgorithm</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>FakeStopLoss</var>
+				<var>FakeStopLossAlgorithm</var>
+			</imp>
+		</rule>
+	</constraints>
+</featureModel>

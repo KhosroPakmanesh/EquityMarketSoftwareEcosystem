@@ -1,0 +1,13 @@
+package emSeco.clearingCropUnit.core.services.infrastructureServices.gateways.clearingCorpApiGateway.interfaces;
+
+import emSeco.clearingCropUnit.core.services.infrastructureServices.gateways.clearingCorpApiGateway.interfaces.gateways.IClearingCorpToClearingBankUnitApiGateway;
+import emSeco.clearingCropUnit.core.services.infrastructureServices.gateways.clearingCorpApiGateway.interfaces.gateways.IClearingCorpToCustodianUnitApiGateway;
+import emSeco.clearingCropUnit.core.services.infrastructureServices.gateways.clearingCorpApiGateway.interfaces.gateways.IClearingCorpToDepositoryUnitApiGateway;
+import emSeco.clearingCropUnit.core.services.infrastructureServices.gateways.clearingCorpApiGateway.interfaces.gateways.IClearingCorpToExchangeUnitApiGateway;
+
+public interface IClearingCorUnitpApiGateways {
+    IClearingCorpToExchangeUnitApiGateway getClearingCorpToExchangeUnitApiGateway();
+    IClearingCorpToClearingBankUnitApiGateway getClearingCorpToClearingBankUnitApiGateway();
+    IClearingCorpToDepositoryUnitApiGateway getClearingCorpToDepositoryUnitApiGateway();
+    IClearingCorpToCustodianUnitApiGateway getClearingCorpToCustodianUnitApiGateway();
+}

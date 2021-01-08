@@ -1,0 +1,9 @@
+package emSeco.exchangeUnit.core.services.infrastructureServices.gateways.exchangeUnitApiGateways.interfaces;
+
+import emSeco.exchangeUnit.core.services.infrastructureServices.gateways.exchangeUnitApiGateways.interfaces.gateways.IExchangeToBrokerUnitApiGateway;
+import emSeco.exchangeUnit.core.services.infrastructureServices.gateways.exchangeUnitApiGateways.interfaces.gateways.IExchangeToClearingCorpUnitApiGateway;
+
+public interface IExchangeUnitApiGateways {
+    IExchangeToClearingCorpUnitApiGateway getExchangeToClearingCorpUnitApiGateway();
+    IExchangeToBrokerUnitApiGateway getExchangeToBrokerUnitApiGateway();
+}

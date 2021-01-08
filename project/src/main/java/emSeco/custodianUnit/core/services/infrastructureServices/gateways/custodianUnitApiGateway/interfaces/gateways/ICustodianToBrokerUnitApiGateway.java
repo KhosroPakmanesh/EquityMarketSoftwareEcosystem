@@ -1,0 +1,8 @@
+package emSeco.custodianUnit.core.services.infrastructureServices.gateways.custodianUnitApiGateway.interfaces.gateways;
+
+import emSeco.custodianUnit.core.services.infrastructureServices.gateways.custodianUnitApiGateway.interfaces.SendContractAnalysisResultInputClass;
+import emSeco.shared.architecturalConstructs.BooleanResultMessages;
+
+public interface ICustodianToBrokerUnitApiGateway {
+    BooleanResultMessages sendContractAnalysisResult(SendContractAnalysisResultInputClass inputClass);
+}
