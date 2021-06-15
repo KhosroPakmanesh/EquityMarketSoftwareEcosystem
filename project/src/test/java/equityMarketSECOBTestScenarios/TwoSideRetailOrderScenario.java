@@ -1,12 +1,12 @@
-package scenarios;
+package equityMarketSECOBTestScenarios;
 
-import com.google.inject.*;
-import org.junit.jupiter.api.Test;
-import emSeco.brokerUnit.core.entities.equityInformation.EquityInformation;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import emSeco.brokerUnit.core.entities.brokerBankAccount.BrokerBankAccount;
 import emSeco.brokerUnit.core.entities.brokerDematAccount.BrokerDematAccount;
-import emSeco.brokerUnit.core.entities.shared.*;
+import emSeco.brokerUnit.core.entities.equityInformation.EquityInformation;
 import emSeco.brokerUnit.core.entities.order.OrderType;
+import emSeco.brokerUnit.core.entities.shared.*;
 import emSeco.brokerUnit.core.modules.broker.interfaces.IBroker;
 import emSeco.brokerUnit.core.modules.broker.models.InitiateRetailOrderOutputClass;
 import emSeco.brokerUnit.core.services.domainServices.brokerServiceRegistry.interfaces.IBrokerServiceRegistry;
@@ -32,6 +32,7 @@ import emSeco.exchangeUnit.core.services.domainServices.exchangeServiceRegistry.
 import emSeco.injectorConfigurations.*;
 import emSeco.shared.architecturalConstructs.BooleanResultMessage;
 import emSeco.shared.architecturalConstructs.BooleanResultMessages;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class TwoSideRetailOrderScenario {
 
         //-----------------------------------------Creating Accounts---------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
-        /*1-Imagine that ten retail client want to trade in an equity market. ّFour of them are sellers, and six of
+        /*1-Imagine that ten retail clients want to trade in an equity market. ّFour of them are sellers, and six of
         them are buyers. Each buyer wants to buy 2000 equities with a price of 20 dollars for each equity. Each seller
         wants to sell 3000 equities with a price of 20 dollars for each equity. They make their orders with the
         following sequence:
@@ -91,13 +92,6 @@ public class TwoSideRetailOrderScenario {
         UUID sellerRetailClient1ClearingBankAccountNumber = UUID.fromString("cb000000-c100-0000-0000-000000000000");
         UUID sellerRetailClient1DematAccountNumber = UUID.fromString("d0000000-c100-0000-0000-000000000000");
         UUID sellerRetailClient1TradingCode = UUID.fromString("e0000000-c1bd-0000-0000-000000000000");
-        BankAccount sellerRetailClient1ClearingBankAccount =
-                new BankAccount(sellerRetailClient1ClearingBankAccountNumber, 0);
-        DematAccount sellerRetailClient1DematAccount =
-                new DematAccount(sellerRetailClient1DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 3000));
-                        }});
         BrokerBankAccount sellerRetailClient1BrokerBankAccount =
                 new BrokerBankAccount(sellerRetailClient1TradingCode, 0);
         BrokerDematAccount sellerRetailClient1BrokerDematAccount =
@@ -112,13 +106,6 @@ public class TwoSideRetailOrderScenario {
         UUID sellerRetailClient2ClearingBankAccountNumber = UUID.fromString("cb000000-c200-0000-0000-000000000000");
         UUID sellerRetailClient2DematAccountNumber = UUID.fromString("d0000000-c200-0000-0000-000000000000");
         UUID sellerRetailClient2TradingCode = UUID.fromString("e0000000-c2bd-0000-0000-000000000000");
-        BankAccount sellerRetailClient2ClearingBankAccount =
-                new BankAccount(sellerRetailClient2ClearingBankAccountNumber, 0);
-        DematAccount sellerRetailClient2DematAccount =
-                new DematAccount(sellerRetailClient2DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 3000));
-                        }});
         BrokerBankAccount sellerRetailClient2BrokerBankAccount =
                 new BrokerBankAccount(sellerRetailClient2TradingCode, 0);
         BrokerDematAccount sellerRetailClient2BrokerDematAccount =
@@ -133,12 +120,6 @@ public class TwoSideRetailOrderScenario {
         UUID buyerRetailClient1ClearingBankAccountNumber = UUID.fromString("cb000000-c300-0000-0000-000000000000");
         UUID buyerRetailClient1DematAccountNumber = UUID.fromString("d0000000-c300-0000-0000-000000000000");
         UUID buyerRetailClient1TradingCode = UUID.fromString("e0000000-c3bd-0000-0000-000000000000");
-        BankAccount buyerRetailClient1ClearingBankAccount =
-                new BankAccount(buyerRetailClient1ClearingBankAccountNumber, 40000);
-        DematAccount buyerRetailClient1DematAccount = new DematAccount(buyerRetailClient1DematAccountNumber,
-                new ArrayList<InstrumentQuantityPair>() {{
-                    add(new InstrumentQuantityPair("MSFT", 0));
-                }});
         BrokerBankAccount buyerRetailClient1BrokerBankAccount =
                 new BrokerBankAccount(buyerRetailClient1TradingCode, 40000);
         BrokerDematAccount buyerRetailClient1BrokerDematAccount =
@@ -153,13 +134,6 @@ public class TwoSideRetailOrderScenario {
         UUID buyerRetailClient2ClearingBankAccountNumber = UUID.fromString("cb000000-c400-0000-0000-000000000000");
         UUID buyerRetailClient2DematAccountNumber = UUID.fromString("d0000000-c400-0000-0000-000000000000");
         UUID buyerRetailClient2TradingCode = UUID.fromString("e0000000-c4bd-0000-0000-000000000000");
-        BankAccount buyerRetailClient2ClearingBankAccount =
-                new BankAccount(buyerRetailClient2ClearingBankAccountNumber, 40000);
-        DematAccount buyerRetailClient2DematAccount =
-                new DematAccount(buyerRetailClient2DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         BrokerBankAccount buyerRetailClient2BrokerBankAccount =
                 new BrokerBankAccount(buyerRetailClient2TradingCode, 40000);
         BrokerDematAccount buyerRetailClient2BrokerDematAccount =
@@ -174,12 +148,6 @@ public class TwoSideRetailOrderScenario {
         UUID buyerRetailClient3ClearingBankAccountNumber = UUID.fromString("cb000000-c500-0000-0000-000000000000");
         UUID buyerRetailClient3DematAccountNumber = UUID.fromString("d0000000-c500-0000-0000-000000000000");
         UUID buyerRetailClient3TradingCode = UUID.fromString("e0000000-c5bd-0000-0000-000000000000");
-        BankAccount buyerRetailClient3ClearingBankAccount =
-                new BankAccount(buyerRetailClient3ClearingBankAccountNumber, 40000);
-        DematAccount buyerRetailClient3DematAccount = new DematAccount(buyerRetailClient3DematAccountNumber,
-                new ArrayList<InstrumentQuantityPair>() {{
-                    add(new InstrumentQuantityPair("MSFT", 0));
-                }});
         BrokerBankAccount buyerRetailClient3BrokerBankAccount =
                 new BrokerBankAccount(buyerRetailClient3TradingCode, 40000);
         BrokerDematAccount buyerRetailClient3BrokerDematAccount =
@@ -194,13 +162,6 @@ public class TwoSideRetailOrderScenario {
         UUID sellerRetailClient3ClearingBankAccountNumber = UUID.fromString("cb000000-c600-0000-0000-000000000000");
         UUID sellerRetailClient3DematAccountNumber = UUID.fromString("d0000000-c600-0000-0000-000000000000");
         UUID sellerRetailClient3TradingCode = UUID.fromString("e0000000-c6bd-0000-0000-000000000000");
-        BankAccount sellerRetailClient3ClearingBankAccount =
-                new BankAccount(sellerRetailClient3ClearingBankAccountNumber, 0);
-        DematAccount sellerRetailClient3DematAccount =
-                new DematAccount(sellerRetailClient3DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 3000));
-                        }});
         BrokerBankAccount sellerRetailClient3BrokerBankAccount =
                 new BrokerBankAccount(sellerRetailClient3TradingCode, 0);
         BrokerDematAccount sellerRetailClient3BrokerDematAccount =
@@ -215,13 +176,6 @@ public class TwoSideRetailOrderScenario {
         UUID sellerRetailClient4ClearingBankAccountNumber = UUID.fromString("cb000000-c700-0000-0000-000000000000");
         UUID sellerRetailClient4DematAccountNumber = UUID.fromString("d0000000-c700-0000-0000-000000000000");
         UUID sellerRetailClient4TradingCode = UUID.fromString("e0000000-c7bd-0000-0000-000000000000");
-        BankAccount sellerRetailClient4ClearingBankAccount =
-                new BankAccount(sellerRetailClient4ClearingBankAccountNumber, 0);
-        DematAccount sellerRetailClient4DematAccount =
-                new DematAccount(sellerRetailClient4DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 3000));
-                        }});
         BrokerBankAccount sellerRetailClient4BrokerBankAccount =
                 new BrokerBankAccount(sellerRetailClient4TradingCode, 0);
         BrokerDematAccount sellerRetailClient4BrokerDematAccount =
@@ -236,13 +190,6 @@ public class TwoSideRetailOrderScenario {
         UUID buyerRetailClient4ClearingBankAccountNumber = UUID.fromString("cb000000-c800-0000-0000-000000000000");
         UUID buyerRetailClient4DematAccountNumber = UUID.fromString("d0000000-c800-0000-0000-000000000000");
         UUID buyerRetailClient4TradingCode = UUID.fromString("e0000000-c8bd-0000-0000-000000000000");
-        BankAccount buyerRetailClient4ClearingBankAccount =
-                new BankAccount(buyerRetailClient4ClearingBankAccountNumber, 40000);
-        DematAccount buyerRetailClient4DematAccount =
-                new DematAccount(buyerRetailClient4DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         BrokerBankAccount buyerRetailClient4BrokerBankAccount =
                 new BrokerBankAccount(buyerRetailClient4TradingCode, 40000);
         BrokerDematAccount buyerRetailClient4BrokerDematAccount =
@@ -257,13 +204,6 @@ public class TwoSideRetailOrderScenario {
         UUID buyerRetailClient5ClearingBankAccountNumber = UUID.fromString("cb000000-c900-0000-0000-000000000000");
         UUID buyerRetailClient5DematAccountNumber = UUID.fromString("d0000000-c900-0000-0000-000000000000");
         UUID buyerRetailClient5TradingCode = UUID.fromString("e0000000-c9bd-0000-0000-000000000000");
-        BankAccount buyerRetailClient5ClearingBankAccount =
-                new BankAccount(buyerRetailClient5ClearingBankAccountNumber, 40000);
-        DematAccount buyerRetailClient5DematAccount =
-                new DematAccount(buyerRetailClient5DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         BrokerBankAccount buyerRetailClient5BrokerBankAccount =
                 new BrokerBankAccount(buyerRetailClient5TradingCode, 40000);
         BrokerDematAccount buyerRetailClient5BrokerDematAccount =
@@ -278,13 +218,6 @@ public class TwoSideRetailOrderScenario {
         UUID buyerRetailClient6ClearingBankAccountNumber = UUID.fromString("cb000000-c010-0000-0000-000000000000");
         UUID buyerRetailClient6DematAccountNumber = UUID.fromString("d0000000-c010-0000-0000-000000000000");
         UUID buyerRetailClient6TradingCode = UUID.fromString("e0000000-c010-bd00-0000-000000000000");
-        BankAccount buyerRetailClient6ClearingBankAccount =
-                new BankAccount(buyerRetailClient6ClearingBankAccountNumber, 40000);
-        DematAccount buyerRetailClient6DematAccount =
-                new DematAccount(buyerRetailClient6DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         BrokerBankAccount buyerRetailClient6BrokerBankAccount =
                 new BrokerBankAccount(buyerRetailClient6TradingCode, 40000);
         BrokerDematAccount buyerRetailClient6BrokerDematAccount =
@@ -296,7 +229,7 @@ public class TwoSideRetailOrderScenario {
                         }});
 
         /*2-Other market participants, such as brokers and the clearing corporation, should have accounts to make a
-        retail trade possible. The accounts information of these people are as follows:*/
+        retail trade possible. The accounts information of these participants are as follows:*/
 
         //broker
         UUID brokerClearingBankAccountNumber = UUID.fromString("cbb00000-0000-0000-0000-000000000000");
@@ -339,18 +272,6 @@ public class TwoSideRetailOrderScenario {
 
         bankAccountRepository.add(brokerClearingBankAccount);
         bankAccountRepository.add(clearingCorpClearingBankAccount);
-
-        bankAccountRepository.add(sellerRetailClient1ClearingBankAccount);
-        bankAccountRepository.add(sellerRetailClient2ClearingBankAccount);
-        bankAccountRepository.add(sellerRetailClient3ClearingBankAccount);
-        bankAccountRepository.add(sellerRetailClient4ClearingBankAccount);
-
-        bankAccountRepository.add(buyerRetailClient1ClearingBankAccount);
-        bankAccountRepository.add(buyerRetailClient2ClearingBankAccount);
-        bankAccountRepository.add(buyerRetailClient3ClearingBankAccount);
-        bankAccountRepository.add(buyerRetailClient4ClearingBankAccount);
-        bankAccountRepository.add(buyerRetailClient5ClearingBankAccount);
-        bankAccountRepository.add(buyerRetailClient6ClearingBankAccount);
         //-------------------------------------------------------------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
 
@@ -368,18 +289,6 @@ public class TwoSideRetailOrderScenario {
 
         dematAccountRepository.add(brokerDematAccount);
         dematAccountRepository.add(clearingCorpDematAccount);
-
-        dematAccountRepository.add(sellerRetailClient1DematAccount);
-        dematAccountRepository.add(sellerRetailClient2DematAccount);
-        dematAccountRepository.add(sellerRetailClient3DematAccount);
-        dematAccountRepository.add(sellerRetailClient4DematAccount);
-
-        dematAccountRepository.add(buyerRetailClient1DematAccount);
-        dematAccountRepository.add(buyerRetailClient2DematAccount);
-        dematAccountRepository.add(buyerRetailClient3DematAccount);
-        dematAccountRepository.add(buyerRetailClient4DematAccount);
-        dematAccountRepository.add(buyerRetailClient5DematAccount);
-        dematAccountRepository.add(buyerRetailClient6DematAccount);
         //-------------------------------------------------------------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
 
@@ -519,70 +428,70 @@ public class TwoSideRetailOrderScenario {
                         exchangeId, clearingBankId, sellerRetailClient1ClearingBankAccountNumber, depositoryId,
                         sellerRetailClient1DematAccountNumber, sellerRetailClient1TradingCode, SideName.sell,
                         new Term(20, 3000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         InitiateRetailOrderOutputClass initiateSellRetailOrderOutputClass2 =
                 broker.initiateRetailOrder_UI(
                         exchangeId, clearingBankId, sellerRetailClient2ClearingBankAccountNumber, depositoryId,
                         sellerRetailClient2DematAccountNumber, sellerRetailClient2TradingCode, SideName.sell,
                         new Term(20, 3000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         InitiateRetailOrderOutputClass initiateBuyRetailOrderOutputClass1 =
                 broker.initiateRetailOrder_UI(
                         exchangeId, clearingBankId, buyerRetailClient1ClearingBankAccountNumber, depositoryId,
                         buyerRetailClient1DematAccountNumber, buyerRetailClient1TradingCode, SideName.buy,
                         new Term(20, 2000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         InitiateRetailOrderOutputClass initiateBuyRetailOrderOutputClass2 =
                 broker.initiateRetailOrder_UI(
                         exchangeId, clearingBankId, buyerRetailClient2ClearingBankAccountNumber, depositoryId,
                         buyerRetailClient2DematAccountNumber, buyerRetailClient2TradingCode, SideName.buy,
-                        new Term(20, 2000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        new Term(20, 2000, "MSFT"), OrderType.MP,
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         InitiateRetailOrderOutputClass initiateBuyRetailOrderOutputClass3 =
                 broker.initiateRetailOrder_UI(
                         exchangeId, clearingBankId, buyerRetailClient3ClearingBankAccountNumber, depositoryId,
                         buyerRetailClient3DematAccountNumber, buyerRetailClient3TradingCode, SideName.buy,
                         new Term(20, 2000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         InitiateRetailOrderOutputClass initiateSellRetailOrderOutputClass3 =
                 broker.initiateRetailOrder_UI(
                         exchangeId, clearingBankId, sellerRetailClient3ClearingBankAccountNumber, depositoryId,
                         sellerRetailClient3DematAccountNumber, sellerRetailClient3TradingCode, SideName.sell,
                         new Term(20, 3000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         InitiateRetailOrderOutputClass initiateSellRetailOrderOutputClass4 =
                 broker.initiateRetailOrder_UI(
                         exchangeId, clearingBankId, sellerRetailClient4ClearingBankAccountNumber, depositoryId,
                         sellerRetailClient4DematAccountNumber, sellerRetailClient4TradingCode, SideName.sell,
                         new Term(20, 3000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         InitiateRetailOrderOutputClass initiateBuyRetailOrderOutputClass4 =
                 broker.initiateRetailOrder_UI(
                         exchangeId, clearingBankId, buyerRetailClient4ClearingBankAccountNumber, depositoryId,
                         buyerRetailClient4DematAccountNumber, buyerRetailClient4TradingCode, SideName.buy,
                         new Term(20, 2000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         InitiateRetailOrderOutputClass initiateRetailOrderOutputClass5 =
                 broker.initiateRetailOrder_UI(
                         exchangeId, clearingBankId, buyerRetailClient5ClearingBankAccountNumber, depositoryId,
                         buyerRetailClient5DematAccountNumber, buyerRetailClient5TradingCode, SideName.buy,
                         new Term(20, 2000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         InitiateRetailOrderOutputClass initiateBuyRetailOrderOutputClass6 =
                 broker.initiateRetailOrder_UI(
                         exchangeId, clearingBankId, buyerRetailClient6ClearingBankAccountNumber, depositoryId,
                         buyerRetailClient6DematAccountNumber, buyerRetailClient6TradingCode, SideName.buy,
                         new Term(20, 2000, "MSFT"), OrderType.LIM,
-                        MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount);
+                        MoneyTransferMethod.brokerInternalAccount, EquityTransferMethod.brokerInternalAccount);
 
         /*5-After processing orders in the exchange, eight trades, which are pairs of buy and sell orders, have been
         created. The trades with their quantities are as follows:
@@ -624,89 +533,92 @@ public class TwoSideRetailOrderScenario {
          */
         List<BooleanResultMessage> dischargeObligationsResultMessages =
                 broker.dischargeObligationsAgainstClients_REC();
+        //-------------------------------------------------------------------------------------------------------//
+        //-------------------------------------------------------------------------------------------------------//
+
         //---------------------------------------------Assertions------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
-        assertEquals(sellerRetailClient1ClearingBankAccount.getBalance(), 60000);
-        double sellerRetailClient1DematAccountQuantity = sellerRetailClient1DematAccount.getInstrumentQuantityPairs()
+        assertEquals(60000, sellerRetailClient1BrokerBankAccount.getBalance());
+        double sellerRetailClient1DematAccountQuantity = sellerRetailClient1BrokerDematAccount.getInstrumentQuantityPairs()
                 .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(sellerRetailClient1DematAccountQuantity, 0);
+        assertEquals(0, sellerRetailClient1DematAccountQuantity);
 
-        assertEquals(sellerRetailClient2ClearingBankAccount.getBalance(), 60000);
-        double sellerRetailClient2DematAccountQuantity = sellerRetailClient2DematAccount.getInstrumentQuantityPairs()
+        assertEquals(60000, sellerRetailClient2BrokerBankAccount.getBalance());
+        double sellerRetailClient2DematAccountQuantity = sellerRetailClient2BrokerDematAccount.getInstrumentQuantityPairs()
                 .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(sellerRetailClient2DematAccountQuantity, 0);
+        assertEquals(0, sellerRetailClient2DematAccountQuantity);
 
-        assertEquals(sellerRetailClient3ClearingBankAccount.getBalance(), 60000);
-        double sellerRetailClient3DematAccountQuantity = sellerRetailClient3DematAccount.getInstrumentQuantityPairs()
+        assertEquals(60000, sellerRetailClient3BrokerBankAccount.getBalance());
+        double sellerRetailClient3DematAccountQuantity = sellerRetailClient3BrokerDematAccount.getInstrumentQuantityPairs()
                 .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(sellerRetailClient3DematAccountQuantity, 0);
+        assertEquals(0, sellerRetailClient3DematAccountQuantity);
 
-        assertEquals(sellerRetailClient4ClearingBankAccount.getBalance(), 60000);
-        double sellerRetailClient4DematAccountQuantity = sellerRetailClient4DematAccount.getInstrumentQuantityPairs()
+        assertEquals(60000, sellerRetailClient4BrokerBankAccount.getBalance());
+        double sellerRetailClient4DematAccountQuantity = sellerRetailClient4BrokerDematAccount.getInstrumentQuantityPairs()
                 .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(sellerRetailClient4DematAccountQuantity, 0);
+        assertEquals(0, sellerRetailClient4DematAccountQuantity);
 
 
-        assertEquals(buyerRetailClient1ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, buyerRetailClient1BrokerBankAccount.getBalance());
         double buyerRetailClient1BrokerDematAccountQuantity =
-                buyerRetailClient1DematAccount.getInstrumentQuantityPairs()
+                buyerRetailClient1BrokerDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(buyerRetailClient1BrokerDematAccountQuantity, 2000);
+        assertEquals(2000, buyerRetailClient1BrokerDematAccountQuantity);
 
-        assertEquals(buyerRetailClient2ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, buyerRetailClient2BrokerBankAccount.getBalance());
         double buyerRetailClient2BrokerDematAccountQuantity =
-                buyerRetailClient2DematAccount.getInstrumentQuantityPairs()
+                buyerRetailClient2BrokerDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(buyerRetailClient2BrokerDematAccountQuantity, 2000);
+        assertEquals(2000, buyerRetailClient2BrokerDematAccountQuantity);
 
-        assertEquals(buyerRetailClient3ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, buyerRetailClient3BrokerBankAccount.getBalance());
         double buyerRetailClient3BrokerDematAccountQuantity =
-                buyerRetailClient3DematAccount.getInstrumentQuantityPairs()
+                buyerRetailClient3BrokerDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(buyerRetailClient3BrokerDematAccountQuantity, 2000);
+        assertEquals(2000, buyerRetailClient3BrokerDematAccountQuantity);
 
-        assertEquals(buyerRetailClient4ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, buyerRetailClient4BrokerBankAccount.getBalance());
         double buyerRetailClient4BrokerDematAccountQuantity =
-                buyerRetailClient4DematAccount.getInstrumentQuantityPairs()
+                buyerRetailClient4BrokerDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(buyerRetailClient4BrokerDematAccountQuantity, 2000);
+        assertEquals(2000, buyerRetailClient4BrokerDematAccountQuantity);
 
-        assertEquals(buyerRetailClient5ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, buyerRetailClient5BrokerBankAccount.getBalance());
         double buyerRetailClient5BrokerDematAccountQuantity =
-                buyerRetailClient5DematAccount.getInstrumentQuantityPairs()
+                buyerRetailClient5BrokerDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(buyerRetailClient5BrokerDematAccountQuantity, 2000);
+        assertEquals(2000, buyerRetailClient5BrokerDematAccountQuantity);
 
-        assertEquals(buyerRetailClient6ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, buyerRetailClient6BrokerBankAccount.getBalance());
         double buyerRetailClient6BrokerDematAccountQuantity =
-                buyerRetailClient6DematAccount.getInstrumentQuantityPairs()
+                buyerRetailClient6BrokerDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(buyerRetailClient6BrokerDematAccountQuantity, 2000);
+        assertEquals(2000, buyerRetailClient6BrokerDematAccountQuantity);
 
 
-        assertEquals(brokerClearingBankAccount.getBalance(), 0);
+        assertEquals(0, brokerClearingBankAccount.getBalance());
         double brokerDematAccountQuantity =
                 brokerDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(brokerDematAccountQuantity, 0);
+        assertEquals(0, brokerDematAccountQuantity);
 
-        assertEquals(clearingCorpClearingBankAccount.getBalance(), 240000);
+        assertEquals(240000, clearingCorpClearingBankAccount.getBalance());
         double clearingCorpDematAccountQuantity =
                 clearingCorpDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(clearingCorpDematAccountQuantity, 12000);
+        assertEquals(12000, clearingCorpDematAccountQuantity);
         //-------------------------------------------------------------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
         //} catch (Throwable ex) {

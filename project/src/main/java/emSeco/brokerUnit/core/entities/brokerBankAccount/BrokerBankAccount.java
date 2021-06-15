@@ -29,4 +29,8 @@ public class BrokerBankAccount {
     {
         return this.balance>= balance;
     }
+
+    public double getBalance() {
+        return balance;
+    }
 }

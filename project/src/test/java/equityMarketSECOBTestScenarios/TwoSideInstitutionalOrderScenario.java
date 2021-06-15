@@ -1,11 +1,10 @@
-package scenarios;
+package equityMarketSECOBTestScenarios;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.junit.jupiter.api.Test;
-import emSeco.brokerUnit.core.entities.noticeOfExecution.NoticeOfExecution;
 import emSeco.brokerUnit.core.entities.equityInformation.EquityInformation;
-import emSeco.brokerUnit.core.entities.order.*;
+import emSeco.brokerUnit.core.entities.noticeOfExecution.NoticeOfExecution;
+import emSeco.brokerUnit.core.entities.order.OrderType;
 import emSeco.brokerUnit.core.entities.shared.*;
 import emSeco.brokerUnit.core.modules.broker.interfaces.IBroker;
 import emSeco.brokerUnit.core.modules.broker.models.InitiateInstitutionalOrderOutputClass;
@@ -21,10 +20,10 @@ import emSeco.clearingbankUnit.core.entities.bankAccount.BankAccount;
 import emSeco.clearingbankUnit.core.modules.clearingBank.interfaces.IClearingBank;
 import emSeco.clearingbankUnit.core.services.infrastructureServices.databases.clearingBankRepositories.interfaces.IClearingBankUnitRepositories;
 import emSeco.clearingbankUnit.core.services.infrastructureServices.databases.clearingBankRepositories.interfaces.repositories.IBankAccountRepository;
-import emSeco.custodianUnit.core.entities.shared.MoneyTransferMethod;
-import emSeco.custodianUnit.core.entities.shared.EquityTransferMethod;
 import emSeco.custodianUnit.core.entities.custodianBankAccount.CustodianBankAccount;
 import emSeco.custodianUnit.core.entities.custodianDematAccount.CustodianDematAccount;
+import emSeco.custodianUnit.core.entities.shared.EquityTransferMethod;
+import emSeco.custodianUnit.core.entities.shared.MoneyTransferMethod;
 import emSeco.custodianUnit.core.modules.custodian.interfaces.ICustodian;
 import emSeco.custodianUnit.core.services.domainServices.custodianServiceRegistry.interfaces.ICustodianServiceRegistry;
 import emSeco.custodianUnit.core.services.infrastructureServices.databases.custodianUnitRepositories.interfaces.ICustodianUnitRepositories;
@@ -40,6 +39,7 @@ import emSeco.exchangeUnit.core.services.domainServices.exchangeServiceRegistry.
 import emSeco.injectorConfigurations.*;
 import emSeco.shared.architecturalConstructs.BooleanResultMessage;
 import emSeco.shared.architecturalConstructs.BooleanResultMessages;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,41 +89,27 @@ public class TwoSideInstitutionalOrderScenario {
             institutional seller 2 |  0	                                  institutional seller 2 |  1500
          */
 
-        //buyer institutional Client 1
-        UUID institutionalClient1ClearingBankAccountNumber = UUID.fromString("cb000000-0000-c100-0000-000000000000");
-        UUID institutionalClient1DematAccountNumber = UUID.fromString("d0000000-0000-c100-0000-000000000000");
-        UUID institutionalClient1RegisteredCode = UUID.fromString("e0000000-0000-c1bd-0000-000000000000");
-        BankAccount institutionalClient1ClearingBankAccount =
-                new BankAccount(institutionalClient1ClearingBankAccountNumber, 30000);
-        DematAccount institutionalClient1DematAccount =
-                new DematAccount(institutionalClient1DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
-        CustodianBankAccount institution1CustodianBankAccount =
-                new CustodianBankAccount(institutionalClient1RegisteredCode, 30000);
-        CustodianDematAccount institution1CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient1RegisteredCode,
+        //buyer institutional Client
+        UUID buyerInstitutionalClientClearingBankAccountNumber = UUID.fromString("cb000000-0000-c100-0000-000000000000");
+        UUID buyerInstitutionalClientDematAccountNumber = UUID.fromString("d0000000-0000-c100-0000-000000000000");
+        UUID buyerInstitutionalClientRegisteredCode = UUID.fromString("e0000000-0000-c1bd-0000-000000000000");
+        CustodianBankAccount buyerInstitutionalClientCustodianBankAccount =
+                new CustodianBankAccount(buyerInstitutionalClientRegisteredCode, 30000);
+        CustodianDematAccount buyerInstitutionalClientCustodianDematAccount =
+                new CustodianDematAccount(buyerInstitutionalClientRegisteredCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //seller institutional Client 1
-        UUID institutionalClient2ClearingBankAccountNumber = UUID.fromString("cb000000-0000-c200-0000-000000000000");
-        UUID institutionalClient2DematAccountNumber = UUID.fromString("d0000000-0000-c200-0000-000000000000");
-        UUID institutionalClient2RegisteredCode = UUID.fromString("e0000000-0000-c2bd-0000-000000000000");
-        BankAccount institutionalClient2ClearingBankAccount =
-                new BankAccount(institutionalClient2ClearingBankAccountNumber, 0);
-        DematAccount institutionalClient2DematAccount =
-                new DematAccount(institutionalClient2DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 1500));
-                        }});
-        CustodianBankAccount institution2CustodianBankAccount =
-                new CustodianBankAccount(institutionalClient2RegisteredCode, 0);
-        CustodianDematAccount institution2CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+        //seller institutional Client
+        UUID sellerInstitutionalClientClearingBankAccountNumber = UUID.fromString("cb000000-0000-c200-0000-000000000000");
+        UUID sellerInstitutionalClientDematAccountNumber = UUID.fromString("d0000000-0000-c200-0000-000000000000");
+        UUID sellerInstitutionalClientRegisteredCode = UUID.fromString("e0000000-0000-c2bd-0000-000000000000");
+        CustodianBankAccount sellerInstitutionalClientCustodianBankAccount =
+                new CustodianBankAccount(sellerInstitutionalClientRegisteredCode, 0);
+        CustodianDematAccount sellerInstitutionalClientCustodianDematAccount =
+                new CustodianDematAccount(sellerInstitutionalClientRegisteredCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 1500));
@@ -132,422 +118,275 @@ public class TwoSideInstitutionalOrderScenario {
         /*2-The accounts' information of the fifteen clients of the buyer institutional client and six clients of the
         seller institutional client, which we are going to talk about in later stages, are as follows:*/
 
-        //buyer institutional Client 1 - allocation detail client 1
+        //buyer institutional Client - allocation detail client 1
         UUID allocationDetailClient1ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c100-000000000000");
         UUID allocationDetailClient1DematAccountNumber = UUID.fromString("d0000000-0000-0000-c100-000000000000");
         UUID allocationDetailClient1TradingCode = UUID.fromString("e0000000-0000-0000-c1bd-000000000000");
-        BankAccount allocationDetailClient1ClearingBankAccount =
-                new BankAccount(allocationDetailClient1ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient1DematAccount =
-                new DematAccount(allocationDetailClient1DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient1CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient1TradingCode, 0);
         CustodianDematAccount allocationDetailClient1CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient1TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 2
+        //buyer institutional Client - allocation detail client 2
         UUID allocationDetailClient2ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c200-000000000000");
         UUID allocationDetailClient2DematAccountNumber = UUID.fromString("d0000000-0000-0000-c200-000000000000");
         UUID allocationDetailClient2TradingCode = UUID.fromString("e0000000-0000-0000-c2bd-000000000000");
-        BankAccount allocationDetailClient2ClearingBankAccount =
-                new BankAccount(allocationDetailClient2ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient2DematAccount =
-                new DematAccount(allocationDetailClient2DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient2CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient2TradingCode, 0);
         CustodianDematAccount allocationDetailClient2CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient2TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 3
+        //buyer institutional Client - allocation detail client 3
         UUID allocationDetailClient3ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c300-000000000000");
         UUID allocationDetailClient3DematAccountNumber = UUID.fromString("d0000000-0000-0000-c300-000000000000");
         UUID allocationDetailClient3TradingCode = UUID.fromString("e0000000-0000-0000-c3bd-000000000000");
-        BankAccount allocationDetailClient3ClearingBankAccount =
-                new BankAccount(allocationDetailClient3ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient3DematAccount =
-                new DematAccount(allocationDetailClient3DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient3CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient3TradingCode, 0);
         CustodianDematAccount allocationDetailClient3CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient3TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 4
+        //buyer institutional Client - allocation detail client 4
         UUID allocationDetailClient4ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c400-000000000000");
         UUID allocationDetailClient4DematAccountNumber = UUID.fromString("d0000000-0000-0000-c400-000000000000");
         UUID allocationDetailClient4TradingCode = UUID.fromString("e0000000-0000-0000-c4bd-000000000000");
-        BankAccount allocationDetailClient4ClearingBankAccount =
-                new BankAccount(allocationDetailClient4ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient4DematAccount =
-                new DematAccount(allocationDetailClient4DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient4CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient4TradingCode, 0);
         CustodianDematAccount allocationDetailClient4CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient4TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 5
+        //buyer institutional Client - allocation detail client 5
         UUID allocationDetailClient5ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c500-000000000000");
         UUID allocationDetailClient5DematAccountNumber = UUID.fromString("d0000000-0000-0000-c500-000000000000");
         UUID allocationDetailClient5TradingCode = UUID.fromString("e0000000-0000-0000-c5bd-000000000000");
-        BankAccount allocationDetailClient5ClearingBankAccount =
-                new BankAccount(allocationDetailClient5ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient5DematAccount =
-                new DematAccount(allocationDetailClient5DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient5CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient5TradingCode, 0);
         CustodianDematAccount allocationDetailClient5CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient5TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 6
+        //buyer institutional Client - allocation detail client 6
         UUID allocationDetailClient6ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c600-000000000000");
         UUID allocationDetailClient6DematAccountNumber = UUID.fromString("d0000000-0000-0000-c600-000000000000");
         UUID allocationDetailClient6TradingCode = UUID.fromString("e0000000-0000-0000-c6bd-000000000000");
-        BankAccount allocationDetailClient6ClearingBankAccount =
-                new BankAccount(allocationDetailClient6ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient6DematAccount =
-                new DematAccount(allocationDetailClient6DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient6CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient6TradingCode, 0);
         CustodianDematAccount allocationDetailClient6CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient6TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 7
+        //buyer institutional Client - allocation detail client 7
         UUID allocationDetailClient7ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c700-000000000000");
         UUID allocationDetailClient7DematAccountNumber = UUID.fromString("d0000000-0000-0000-c700-000000000000");
         UUID allocationDetailClient7TradingCode = UUID.fromString("e0000000-0000-0000-c7bd-000000000000");
-        BankAccount allocationDetailClient7ClearingBankAccount =
-                new BankAccount(allocationDetailClient7ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient7DematAccount =
-                new DematAccount(allocationDetailClient7DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient7CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient7TradingCode, 0);
         CustodianDematAccount allocationDetailClient7CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient7TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 8
+        //buyer institutional Client - allocation detail client 8
         UUID allocationDetailClient8ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c800-000000000000");
         UUID allocationDetailClient8DematAccountNumber = UUID.fromString("d0000000-0000-0000-c800-000000000000");
         UUID allocationDetailClient8TradingCode = UUID.fromString("e0000000-0000-0000-c8bd-000000000000");
-        BankAccount allocationDetailClient8ClearingBankAccount =
-                new BankAccount(allocationDetailClient8ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient8DematAccount =
-                new DematAccount(allocationDetailClient8DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient8CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient8TradingCode, 0);
         CustodianDematAccount allocationDetailClient8CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient8TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 9
+        //buyer institutional Client - allocation detail client 9
         UUID allocationDetailClient9ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c900-000000000000");
         UUID allocationDetailClient9DematAccountNumber = UUID.fromString("d0000000-0000-0000-c900-000000000000");
         UUID allocationDetailClient9TradingCode = UUID.fromString("e0000000-0000-0000-c9bd-000000000000");
-        BankAccount allocationDetailClient9ClearingBankAccount =
-                new BankAccount(allocationDetailClient9ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient9DematAccount =
-                new DematAccount(allocationDetailClient9DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient9CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient9TradingCode, 0);
         CustodianDematAccount allocationDetailClient9CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient9TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 10
+        //buyer institutional Client - allocation detail client 10
         UUID allocationDetailClient10ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-0c10-000000000000");
         UUID allocationDetailClient10DematAccountNumber = UUID.fromString("d0000000-0000-0000-0c10-000000000000");
         UUID allocationDetailClient10TradingCode = UUID.fromString("e0000000-0000-0000-0c10-bd0000000000");
-        BankAccount allocationDetailClient10ClearingBankAccount =
-                new BankAccount(allocationDetailClient10ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient10DematAccount =
-                new DematAccount(allocationDetailClient10DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient10CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient10TradingCode, 0);
         CustodianDematAccount allocationDetailClient10CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient10TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 11
+        //buyer institutional Client - allocation detail client 11
         UUID allocationDetailClient11ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c110-000000000000");
         UUID allocationDetailClient11DematAccountNumber = UUID.fromString("d0000000-0000-0000-c110-000000000000");
         UUID allocationDetailClient11TradingCode = UUID.fromString("e0000000-0000-0000-c011-bd0000000000");
-        BankAccount allocationDetailClient11ClearingBankAccount =
-                new BankAccount(allocationDetailClient11ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient11DematAccount =
-                new DematAccount(allocationDetailClient11DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient11CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient11TradingCode, 0);
         CustodianDematAccount allocationDetailClient11CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient11TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 12
+        //buyer institutional Client - allocation detail client 12
         UUID allocationDetailClient12ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c120-000000000000");
         UUID allocationDetailClient12DematAccountNumber = UUID.fromString("d0000000-0000-0000-c120-000000000000");
         UUID allocationDetailClient12TradingCode = UUID.fromString("e0000000-0000-0000-c012-bd0000000000");
-        BankAccount allocationDetailClient12ClearingBankAccount =
-                new BankAccount(allocationDetailClient12ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient12DematAccount =
-                new DematAccount(allocationDetailClient12DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient12CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient12TradingCode, 0);
         CustodianDematAccount allocationDetailClient12CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient12TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 13
+        //buyer institutional Client - allocation detail client 13
         UUID allocationDetailClient13ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c130-000000000000");
         UUID allocationDetailClient13DematAccountNumber = UUID.fromString("d0000000-0000-0000-c130-000000000000");
         UUID allocationDetailClient13TradingCode = UUID.fromString("e0000000-0000-0000-c013-bd0000000000");
-        BankAccount allocationDetailClient13ClearingBankAccount =
-                new BankAccount(allocationDetailClient13ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient13DematAccount =
-                new DematAccount(allocationDetailClient13DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient13CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient13TradingCode, 0);
         CustodianDematAccount allocationDetailClient13CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient13TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 14
+        //buyer institutional Client - allocation detail client 14
         UUID allocationDetailClient14ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c140-000000000000");
         UUID allocationDetailClient14DematAccountNumber = UUID.fromString("d0000000-0000-0000-c140-000000000000");
         UUID allocationDetailClient14TradingCode = UUID.fromString("e0000000-0000-0000-c014-bd0000000000");
-        BankAccount allocationDetailClient14ClearingBankAccount =
-                new BankAccount(allocationDetailClient14ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient14DematAccount =
-                new DematAccount(allocationDetailClient14DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient14CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient14TradingCode, 0);
         CustodianDematAccount allocationDetailClient14CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient14TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //buyer institutional Client 1 - allocation detail client 15
+        //buyer institutional Client - allocation detail client 15
         UUID allocationDetailClient15ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c150-000000000000");
         UUID allocationDetailClient15DematAccountNumber = UUID.fromString("d0000000-0000-0000-c150-000000000000");
         UUID allocationDetailClient15TradingCode = UUID.fromString("e0000000-0000-0000-c015-bd0000000000");
-        BankAccount allocationDetailClient15ClearingBankAccount =
-                new BankAccount(allocationDetailClient15ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient15DematAccount =
-                new DematAccount(allocationDetailClient15DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient15CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient15TradingCode, 0);
         CustodianDematAccount allocationDetailClient15CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient15TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
 
-        //seller institutional Client 2 - allocation detail client 16
+        //seller institutional Client - allocation detail client 16
         UUID allocationDetailClient16ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c160-000000000000");
         UUID allocationDetailClient16DematAccountNumber = UUID.fromString("d0000000-0000-0000-c160-000000000000");
         UUID allocationDetailClient16TradingCode = UUID.fromString("e0000000-0000-0000-c016-bd0000000000");
-        BankAccount allocationDetailClient16ClearingBankAccount =
-                new BankAccount(allocationDetailClient16ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient16DematAccount =
-                new DematAccount(allocationDetailClient16DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient16CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient16TradingCode, 0);
         CustodianDematAccount allocationDetailClient16CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient16TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //seller institutional Client 2 - allocation detail client 17
+        //seller institutional Client - allocation detail client 17
         UUID allocationDetailClient17ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c170-000000000000");
         UUID allocationDetailClient17DematAccountNumber = UUID.fromString("d0000000-0000-0000-c170-000000000000");
         UUID allocationDetailClient17TradingCode = UUID.fromString("e0000000-0000-0000-c017-bd0000000000");
-        BankAccount allocationDetailClient17ClearingBankAccount =
-                new BankAccount(allocationDetailClient17ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient17DematAccount =
-                new DematAccount(allocationDetailClient17DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient17CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient17TradingCode, 0);
         CustodianDematAccount allocationDetailClient17CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient17TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //seller institutional Client 2 - allocation detail client 18
+        //seller institutional Client - allocation detail client 18
         UUID allocationDetailClient18ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c180-000000000000");
         UUID allocationDetailClient18DematAccountNumber = UUID.fromString("d0000000-0000-0000-c180-000000000000");
         UUID allocationDetailClient18TradingCode = UUID.fromString("e0000000-0000-0000-c018-bd0000000000");
-        BankAccount allocationDetailClient18ClearingBankAccount =
-                new BankAccount(allocationDetailClient18ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient18DematAccount =
-                new DematAccount(allocationDetailClient18DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient18CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient18TradingCode, 0);
         CustodianDematAccount allocationDetailClient18CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient18TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //seller institutional Client 2 - allocation detail client 19
+        //seller institutional Client - allocation detail client 19
         UUID allocationDetailClient19ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c190-000000000000");
         UUID allocationDetailClient19DematAccountNumber = UUID.fromString("d0000000-0000-0000-c190-000000000000");
         UUID allocationDetailClient19TradingCode = UUID.fromString("e0000000-0000-0000-c019-bd0000000000");
-        BankAccount allocationDetailClient19ClearingBankAccount =
-                new BankAccount(allocationDetailClient19ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient19DematAccount =
-                new DematAccount(allocationDetailClient19DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient19CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient19TradingCode, 0);
         CustodianDematAccount allocationDetailClient19CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient19TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //seller institutional Client 2 - allocation detail client 20
+        //seller institutional Client - allocation detail client 20
         UUID allocationDetailClient20ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c020-000000000000");
         UUID allocationDetailClient20DematAccountNumber = UUID.fromString("d0000000-0000-0000-c020-000000000000");
         UUID allocationDetailClient20TradingCode = UUID.fromString("e0000000-0000-0000-c020-bd0000000000");
-        BankAccount allocationDetailClient20ClearingBankAccount =
-                new BankAccount(allocationDetailClient20ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient20DematAccount =
-                new DematAccount(allocationDetailClient20DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient20CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient20TradingCode, 0);
         CustodianDematAccount allocationDetailClient20CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient20TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
                         }});
 
-        //seller institutional Client 2 - allocation detail client 21
+        //seller institutional Client - allocation detail client 21
         UUID allocationDetailClient21ClearingBankAccountNumber = UUID.fromString("cb000000-0000-0000-c021-000000000000");
         UUID allocationDetailClient21DematAccountNumber = UUID.fromString("d0000000-0000-0000-c021-000000000000");
         UUID allocationDetailClient21TradingCode = UUID.fromString("e0000000-0000-0000-c021-bd0000000000");
-        BankAccount allocationDetailClient21ClearingBankAccount =
-                new BankAccount(allocationDetailClient21ClearingBankAccountNumber, 0);
-        DematAccount allocationDetailClient21DematAccount =
-                new DematAccount(allocationDetailClient21DematAccountNumber,
-                        new ArrayList<InstrumentQuantityPair>() {{
-                            add(new InstrumentQuantityPair("MSFT", 0));
-                        }});
         CustodianBankAccount allocationDetailClient21CustodianBankAccount =
                 new CustodianBankAccount(allocationDetailClient21TradingCode, 0);
         CustodianDematAccount allocationDetailClient21CustodianDematAccount =
-                new CustodianDematAccount(institutionalClient2RegisteredCode,
+                new CustodianDematAccount(allocationDetailClient21TradingCode,
                         new ArrayList<emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair>() {{
                             add(new emSeco.custodianUnit.core.entities.custodianDematAccount.InstrumentQuantityPair
                                     ("MSFT", 0));
@@ -636,32 +475,6 @@ public class TwoSideInstitutionalOrderScenario {
         bankAccountRepository.add(custodian1ClearingBankAccount);
         bankAccountRepository.add(custodian2ClearingBankAccount);
         bankAccountRepository.add(clearingCorpClearingBankAccount);
-
-        bankAccountRepository.add(institutionalClient1ClearingBankAccount);
-        bankAccountRepository.add(institutionalClient2ClearingBankAccount);
-
-        bankAccountRepository.add(allocationDetailClient1ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient2ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient3ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient4ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient5ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient6ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient7ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient8ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient9ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient10ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient11ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient12ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient13ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient14ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient15ClearingBankAccount);
-
-        bankAccountRepository.add(allocationDetailClient16ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient17ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient18ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient19ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient20ClearingBankAccount);
-        bankAccountRepository.add(allocationDetailClient21ClearingBankAccount);
         //-------------------------------------------------------------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
 
@@ -682,32 +495,6 @@ public class TwoSideInstitutionalOrderScenario {
         dematAccountRepository.add(custodian1DematAccount);
         dematAccountRepository.add(custodian2DematAccount);
         dematAccountRepository.add(clearingCorpDematAccount);
-
-        dematAccountRepository.add(institutionalClient1DematAccount);
-        dematAccountRepository.add(institutionalClient2DematAccount);
-
-        dematAccountRepository.add(allocationDetailClient1DematAccount);
-        dematAccountRepository.add(allocationDetailClient2DematAccount);
-        dematAccountRepository.add(allocationDetailClient3DematAccount);
-        dematAccountRepository.add(allocationDetailClient4DematAccount);
-        dematAccountRepository.add(allocationDetailClient5DematAccount);
-        dematAccountRepository.add(allocationDetailClient6DematAccount);
-        dematAccountRepository.add(allocationDetailClient7DematAccount);
-        dematAccountRepository.add(allocationDetailClient8DematAccount);
-        dematAccountRepository.add(allocationDetailClient9DematAccount);
-        dematAccountRepository.add(allocationDetailClient10DematAccount);
-        dematAccountRepository.add(allocationDetailClient11DematAccount);
-        dematAccountRepository.add(allocationDetailClient12DematAccount);
-        dematAccountRepository.add(allocationDetailClient13DematAccount);
-        dematAccountRepository.add(allocationDetailClient14DematAccount);
-        dematAccountRepository.add(allocationDetailClient15DematAccount);
-
-        dematAccountRepository.add(allocationDetailClient16DematAccount);
-        dematAccountRepository.add(allocationDetailClient17DematAccount);
-        dematAccountRepository.add(allocationDetailClient18DematAccount);
-        dematAccountRepository.add(allocationDetailClient19DematAccount);
-        dematAccountRepository.add(allocationDetailClient20DematAccount);
-        dematAccountRepository.add(allocationDetailClient21DematAccount);
         //-------------------------------------------------------------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
 
@@ -812,7 +599,7 @@ public class TwoSideInstitutionalOrderScenario {
                 custodian1UnitRepositories.getCustodianDematAccountRepository();
 
 
-        custodian1BankAccountRepository.add(institution1CustodianBankAccount);
+        custodian1BankAccountRepository.add(buyerInstitutionalClientCustodianBankAccount);
         custodian1BankAccountRepository.add(allocationDetailClient1CustodianBankAccount);
         custodian1BankAccountRepository.add(allocationDetailClient2CustodianBankAccount);
         custodian1BankAccountRepository.add(allocationDetailClient3CustodianBankAccount);
@@ -829,7 +616,7 @@ public class TwoSideInstitutionalOrderScenario {
         custodian1BankAccountRepository.add(allocationDetailClient14CustodianBankAccount);
         custodian1BankAccountRepository.add(allocationDetailClient15CustodianBankAccount);
 
-        custodian1DematAccountRepository.add(institution1CustodianDematAccount);
+        custodian1DematAccountRepository.add(buyerInstitutionalClientCustodianDematAccount);
         custodian1DematAccountRepository.add(allocationDetailClient1CustodianDematAccount);
         custodian1DematAccountRepository.add(allocationDetailClient2CustodianDematAccount);
         custodian1DematAccountRepository.add(allocationDetailClient3CustodianDematAccount);
@@ -880,7 +667,7 @@ public class TwoSideInstitutionalOrderScenario {
         ICustodianDematAccountRepository custodian2DematAccountRepository =
                 custodian2UnitRepositories.getCustodianDematAccountRepository();
 
-        custodian2BankAccountRepository.add(institution2CustodianBankAccount);
+        custodian2BankAccountRepository.add(sellerInstitutionalClientCustodianBankAccount);
         custodian2BankAccountRepository.add(allocationDetailClient16CustodianBankAccount);
         custodian2BankAccountRepository.add(allocationDetailClient17CustodianBankAccount);
         custodian2BankAccountRepository.add(allocationDetailClient18CustodianBankAccount);
@@ -888,7 +675,7 @@ public class TwoSideInstitutionalOrderScenario {
         custodian2BankAccountRepository.add(allocationDetailClient20CustodianBankAccount);
         custodian2BankAccountRepository.add(allocationDetailClient21CustodianBankAccount);
 
-        custodian2DematAccountRepository.add(institution2CustodianDematAccount);
+        custodian2DematAccountRepository.add(sellerInstitutionalClientCustodianDematAccount);
         custodian2DematAccountRepository.add(allocationDetailClient16CustodianDematAccount);
         custodian2DematAccountRepository.add(allocationDetailClient17CustodianDematAccount);
         custodian2DematAccountRepository.add(allocationDetailClient18CustodianDematAccount);
@@ -1007,36 +794,36 @@ public class TwoSideInstitutionalOrderScenario {
         order passes all checks, it is routed from the broker to an exchange.*/
         InitiateInstitutionalOrderOutputClass initiateInstitutionalOrderOutputClass =
                 broker1.initiateInstitutionalOrder_UI(
-                        custodian1Id, exchangeId, institutionalClient1RegisteredCode, SideName.buy,
+                        custodian1Id, exchangeId, buyerInstitutionalClientRegisteredCode, SideName.buy,
                         new Term(20, 1500, "MSFT"), OrderType.LIM,
-                        emSeco.brokerUnit.core.entities.shared.MoneyTransferMethod.clearingBankAccount,
-                        emSeco.brokerUnit.core.entities.shared.EquityTransferMethod.depositoryDematAccount);
+                        emSeco.brokerUnit.core.entities.shared.MoneyTransferMethod.brokerInternalAccount,
+                        emSeco.brokerUnit.core.entities.shared.EquityTransferMethod.brokerInternalAccount);
 
         InitiateInstitutionalOrderOutputClass initiateInstitutionalOrderOutputClass2 =
                 broker2.initiateInstitutionalOrder_UI(
-                        custodian2Id, exchangeId, institutionalClient2RegisteredCode, SideName.sell,
+                        custodian2Id, exchangeId, sellerInstitutionalClientRegisteredCode, SideName.sell,
                         new Term(20, 1500, "MSFT"), OrderType.LIM,
-                        emSeco.brokerUnit.core.entities.shared.MoneyTransferMethod.clearingBankAccount,
-                        emSeco.brokerUnit.core.entities.shared.EquityTransferMethod.depositoryDematAccount);
+                        emSeco.brokerUnit.core.entities.shared.MoneyTransferMethod.brokerInternalAccount,
+                        emSeco.brokerUnit.core.entities.shared.EquityTransferMethod.brokerInternalAccount);
 
         /*5-The buyer institutional client deposits the required money for the trades settlement stage with a custodian*/
         BooleanResultMessage depositMoneyResultMessage =
-                custodian1.depositMoney_UI(clearingBankId, institutionalClient1ClearingBankAccountNumber,
-                        institutionalClient1RegisteredCode,
-                        30000, MoneyTransferMethod.clearingBankAccount);
+                custodian1.depositMoney_UI(clearingBankId, buyerInstitutionalClientClearingBankAccountNumber,
+                        buyerInstitutionalClientRegisteredCode,
+                        30000, MoneyTransferMethod.custodianInternalAccount);
 
         /*6-The seller institutional client deposits the required equities for the trades settlement stage with a custodian*/
         BooleanResultMessage depositEquitiesResultMessage =
-                custodian2.depositEquities_UI(depositoryId, institutionalClient2DematAccountNumber,
-                        institutionalClient2RegisteredCode, "MSFT", 1500,
-                        EquityTransferMethod.depositoryDematAccount);
+                custodian2.depositEquities_UI(depositoryId, sellerInstitutionalClientDematAccountNumber,
+                        sellerInstitutionalClientRegisteredCode, "MSFT", 1500,
+                        EquityTransferMethod.custodianInternalAccount);
 
         /*7-After processing orders in the exchange, one trade, which is a pair of buy and sell orders, has been created.
         The trade with its quantities is as follows::
 
-            side                  | quantity                side                   | quantity
-            --------------------------------                ---------------------------------
-            institutional buyer 1 | 1500	                institutional seller 2 | 1500
+            side                 | quantity             side                  | quantity
+            --------------------------------            --------------------------------
+            institutional buyer  | 1500	                institutional seller  | 1500
         */
         List<BooleanResultMessages> listOfOrderProcessingResultMessages = exchange.processOrders_REC();
 
@@ -1096,49 +883,49 @@ public class TwoSideInstitutionalOrderScenario {
         SubmitAllocationDetailsOutputClass broker1SubmitAllocationDetailsOutputClass =
                 broker1.submitAllocationDetails_UI(new ArrayList<SubmitAllocationDetailsInputClass>() {{
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail1Id, allocationDetailBlockId1,
-                            allocationDetailClient1TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient1TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail2Id, allocationDetailBlockId1,
-                            allocationDetailClient2TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient2TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail3Id, allocationDetailBlockId1,
-                            allocationDetailClient3TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient3TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail4Id, allocationDetailBlockId1,
-                            allocationDetailClient4TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient4TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail5Id, allocationDetailBlockId1,
-                            allocationDetailClient5TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient5TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail6Id, allocationDetailBlockId1,
-                            allocationDetailClient6TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient6TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail7Id, allocationDetailBlockId1,
-                            allocationDetailClient7TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient7TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail8Id, allocationDetailBlockId1,
-                            allocationDetailClient8TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient8TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail9Id, allocationDetailBlockId1,
-                            allocationDetailClient9TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient9TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail10Id, allocationDetailBlockId1,
-                            allocationDetailClient10TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient10TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail11Id, allocationDetailBlockId1,
-                            allocationDetailClient11TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient11TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail12Id, allocationDetailBlockId1,
-                            allocationDetailClient12TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient12TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail13Id, allocationDetailBlockId1,
-                            allocationDetailClient13TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient13TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail14Id, allocationDetailBlockId1,
-                            allocationDetailClient14TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient14TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                     add(new SubmitAllocationDetailsInputClass(custodian1Id, allocationDetail15Id, allocationDetailBlockId1,
-                            allocationDetailClient15TradingCode, institutionalClient1RegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
+                            allocationDetailClient15TradingCode, buyerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 100));
                 }});
 
@@ -1149,93 +936,93 @@ public class TwoSideInstitutionalOrderScenario {
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail1Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient1ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient1DematAccountNumber, allocationDetailClient1TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient1DematAccountNumber, allocationDetailClient1TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail2Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient2ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient2DematAccountNumber, allocationDetailClient2TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient2DematAccountNumber, allocationDetailClient2TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail3Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient3ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient3DematAccountNumber, allocationDetailClient3TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient3DematAccountNumber, allocationDetailClient3TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail4Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient4ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient4DematAccountNumber, allocationDetailClient4TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient4DematAccountNumber, allocationDetailClient4TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail5Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient5ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient5DematAccountNumber, allocationDetailClient5TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient5DematAccountNumber, allocationDetailClient5TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail6Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient6ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient6DematAccountNumber, allocationDetailClient6TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient6DematAccountNumber, allocationDetailClient6TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail7Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient7ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient7DematAccountNumber, allocationDetailClient7TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient7DematAccountNumber, allocationDetailClient7TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail8Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient8ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient8DematAccountNumber, allocationDetailClient8TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient8DematAccountNumber, allocationDetailClient8TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail9Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient9ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient9DematAccountNumber, allocationDetailClient9TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient9DematAccountNumber, allocationDetailClient9TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail10Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient10ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient10DematAccountNumber, allocationDetailClient10TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient10DematAccountNumber, allocationDetailClient10TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail11Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient11ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient11DematAccountNumber, allocationDetailClient11TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient11DematAccountNumber, allocationDetailClient11TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail12Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient12ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient12DematAccountNumber, allocationDetailClient12TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient12DematAccountNumber, allocationDetailClient12TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail13Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient13ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient13DematAccountNumber, allocationDetailClient13TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient13DematAccountNumber, allocationDetailClient13TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail14Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient14ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient14DematAccountNumber, allocationDetailClient14TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient14DematAccountNumber, allocationDetailClient14TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker1Id, allocationDetail15Id, allocationDetailBlockId1,
                             clearingBankId, allocationDetailClient15ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient15DematAccountNumber, allocationDetailClient15TradingCode, institutionalClient1RegisteredCode,
+                            allocationDetailClient15DematAccountNumber, allocationDetailClient15TradingCode, buyerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass.getOrderId(), "MSFT", 20, 100,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                 }});
         /*13-After conducting the trade, the seller institutional client decides to allocate its trade to six clients.
         Since they have transferred the ownership of equities to the seller institutional client beforehand, they do
@@ -1264,22 +1051,22 @@ public class TwoSideInstitutionalOrderScenario {
         SubmitAllocationDetailsOutputClass broker2SubmitAllocationDetailsOutputClass =
                 broker2.submitAllocationDetails_UI(new ArrayList<SubmitAllocationDetailsInputClass>() {{
                     add(new SubmitAllocationDetailsInputClass(custodian2Id, allocationDetail16Id, allocationDetailBlockId2,
-                            allocationDetailClient16TradingCode, institutionalClient2RegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
+                            allocationDetailClient16TradingCode, sellerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 250));
                     add(new SubmitAllocationDetailsInputClass(custodian2Id, allocationDetail17Id, allocationDetailBlockId2,
-                            allocationDetailClient17TradingCode, institutionalClient2RegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
+                            allocationDetailClient17TradingCode, sellerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 250));
                     add(new SubmitAllocationDetailsInputClass(custodian2Id, allocationDetail18Id, allocationDetailBlockId2,
-                            allocationDetailClient18TradingCode, institutionalClient2RegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
+                            allocationDetailClient18TradingCode, sellerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 250));
                     add(new SubmitAllocationDetailsInputClass(custodian2Id, allocationDetail19Id, allocationDetailBlockId2,
-                            allocationDetailClient19TradingCode, institutionalClient2RegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
+                            allocationDetailClient19TradingCode, sellerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 250));
                     add(new SubmitAllocationDetailsInputClass(custodian2Id, allocationDetail20Id, allocationDetailBlockId2,
-                            allocationDetailClient20TradingCode, institutionalClient2RegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
+                            allocationDetailClient20TradingCode, sellerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 250));
                     add(new SubmitAllocationDetailsInputClass(custodian2Id, allocationDetail21Id, allocationDetailBlockId2,
-                            allocationDetailClient21TradingCode, institutionalClient2RegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
+                            allocationDetailClient21TradingCode, sellerInstitutionalClientRegisteredCode, initiateInstitutionalOrderOutputClass2.getOrderId(),
                             InitiatorType.retail, "MSFT", 20, 250));
                 }});
 
@@ -1290,76 +1077,75 @@ public class TwoSideInstitutionalOrderScenario {
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker2Id, allocationDetail16Id, allocationDetailBlockId2,
                             clearingBankId, allocationDetailClient16ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient16DematAccountNumber, allocationDetailClient16TradingCode, institutionalClient2RegisteredCode,
+                            allocationDetailClient16DematAccountNumber, allocationDetailClient16TradingCode, sellerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass2.getOrderId(), "MSFT", 20, 250,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker2Id, allocationDetail17Id, allocationDetailBlockId2,
                             clearingBankId, allocationDetailClient17ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient17DematAccountNumber, allocationDetailClient17TradingCode, institutionalClient2RegisteredCode,
+                            allocationDetailClient17DematAccountNumber, allocationDetailClient17TradingCode, sellerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass2.getOrderId(), "MSFT", 20, 250,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker2Id, allocationDetail18Id, allocationDetailBlockId2,
                             clearingBankId, allocationDetailClient18ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient18DematAccountNumber, allocationDetailClient18TradingCode, institutionalClient2RegisteredCode,
+                            allocationDetailClient18DematAccountNumber, allocationDetailClient18TradingCode, sellerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass2.getOrderId(), "MSFT", 20, 250,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker2Id, allocationDetail19Id, allocationDetailBlockId2,
                             clearingBankId, allocationDetailClient19ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient19DematAccountNumber, allocationDetailClient19TradingCode, institutionalClient2RegisteredCode,
+                            allocationDetailClient19DematAccountNumber, allocationDetailClient19TradingCode, sellerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass2.getOrderId(), "MSFT", 20, 250,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker2Id, allocationDetail20Id, allocationDetailBlockId2,
                             clearingBankId, allocationDetailClient20ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient20DematAccountNumber, allocationDetailClient20TradingCode, institutionalClient2RegisteredCode,
+                            allocationDetailClient20DematAccountNumber, allocationDetailClient20TradingCode, sellerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass2.getOrderId(), "MSFT", 20, 250,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                     add(new emSeco.custodianUnit.core.modules.custodian.models.
                             SubmitAllocationDetailsInputClass(broker2Id, allocationDetail21Id, allocationDetailBlockId2,
                             clearingBankId, allocationDetailClient21ClearingBankAccountNumber, depositoryId,
-                            allocationDetailClient21DematAccountNumber, allocationDetailClient21TradingCode, institutionalClient2RegisteredCode,
+                            allocationDetailClient21DematAccountNumber, allocationDetailClient21TradingCode, sellerInstitutionalClientRegisteredCode,
                             initiateInstitutionalOrderOutputClass2.getOrderId(), "MSFT", 20, 250,
-                            MoneyTransferMethod.clearingBankAccount, EquityTransferMethod.depositoryDematAccount));
+                            MoneyTransferMethod.custodianInternalAccount, EquityTransferMethod.custodianInternalAccount));
                 }});
 
         /*15-The broker of the buyer institutional client generates some contracts based on the allocation details and
         send them to the custodian of the buyer institutional client.
 
         side                              |  quantity              side   | quantity
-        ---------------------------------------------              ------------------------------
-        allocation detail retail buyer 1  |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 2  |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 3  |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 4  |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 5  |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 6  |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 7  |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 8  |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 9  |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 10 |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 11 |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 12 |  100	               institutional seller 2  |  100
-        allocation detail retail buyer 13 |  100	               institutional seller 2  | 100
-        allocation detail retail buyer 14 |  50	                   institutional seller 2  | 100
-        allocation detail retail buyer 15 |  50	                   institutional seller 2  | 100
-        allocation detail retail buyer 16 |  100	               institutional seller 2  | 100
+        ---------------------------------------------              -----------------------------
+        allocation detail retail buyer 1  |  100	               institutional seller   | 100
+        allocation detail retail buyer 2  |  100	               institutional seller   | 100
+        allocation detail retail buyer 3  |  100	               institutional seller   | 100
+        allocation detail retail buyer 4  |  100	               institutional seller   | 100
+        allocation detail retail buyer 5  |  100	               institutional seller   | 100
+        allocation detail retail buyer 6  |  100	               institutional seller   | 100
+        allocation detail retail buyer 7  |  100	               institutional seller   | 100
+        allocation detail retail buyer 8  |  100	               institutional seller   | 100
+        allocation detail retail buyer 9  |  100	               institutional seller   | 100
+        allocation detail retail buyer 10 |  100	               institutional seller   | 100
+        allocation detail retail buyer 11 |  100	               institutional seller   | 100
+        allocation detail retail buyer 12 |  100	               institutional seller   | 100
+        allocation detail retail buyer 13 |  100	               institutional seller   | 100
+        allocation detail retail buyer 14 |  100	               institutional seller   | 100
+        allocation detail retail buyer 15 |  100	               institutional seller   | 100
          */
         BooleanResultMessages broker1GenerateContractsResultMessages = broker1.generateContracts_REC();
 
         /*16-The broker of the seller institutional client generates some contracts based on the allocation details and
         send them to the custodian of the seller institutional client.
 
-        side                   |  quantity              side                            |  quantity
-        ---------------------------------              --------------------------------------
-        institutional seller 1 |  250	               allocation detail retail buyer 1 |  250
-        institutional seller 1 |  250	               allocation detail retail buyer 2 |  250
-        institutional seller 1 |  250	               allocation detail retail buyer 3 |  250
-        institutional seller 1 |  250	               allocation detail retail buyer 4 |  250
-        institutional seller 1 |  250	               allocation detail retail buyer 5 |  250
-        institutional seller 1 |  250	               allocation detail retail buyer 6 |  250
+        side                 |  quantity              side                           |  quantity
+        ---------------------------------              -----------------------------------------
+        institutional buyer  |  250	               allocation detail retail seller 1 |  250
+        institutional buyer  |  250	               allocation detail retail seller 2 |  250
+        institutional buyer  |  250	               allocation detail retail seller 3 |  250
+        institutional buyer  |  250	               allocation detail retail seller 4 |  250
+        institutional buyer  |  250	               allocation detail retail seller 5 |  250
+        institutional buyer  |  250	               allocation detail retail seller 6 |  250
          */
         BooleanResultMessages broker2GenerateContractsResultMessages = broker2.generateContracts_REC();
 
@@ -1460,205 +1246,208 @@ public class TwoSideInstitutionalOrderScenario {
                 custodian1.dischargeObligationsAgainstClients_REC();
         List<BooleanResultMessage> custodian2DischargeObligationResultMessages =
                 custodian2.dischargeObligationsAgainstClients_REC();
+        //-------------------------------------------------------------------------------------------------------//
+        //-------------------------------------------------------------------------------------------------------//
+
         //---------------------------------------------Assertions------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
-        assertEquals(institutionalClient1ClearingBankAccount.getBalance(), 0);
-        double institutionalClient1DematAccountQuantity =
-                institutionalClient1DematAccount.getInstrumentQuantityPairs()
+        assertEquals(0, buyerInstitutionalClientCustodianBankAccount.getBalance());
+        double institutionalClient1CustodianDematAccountQuantity =
+                buyerInstitutionalClientCustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(institutionalClient1DematAccountQuantity, 0);
+        assertEquals(0, institutionalClient1CustodianDematAccountQuantity);
 
-        assertEquals(allocationDetailClient1ClearingBankAccount.getBalance(), 0);
-        double allocationDetailClient1DematAccountQuantity =
-                allocationDetailClient1DematAccount.getInstrumentQuantityPairs()
+        assertEquals(0, allocationDetailClient1CustodianBankAccount.getBalance());
+        double allocationDetailClient1CustodianDematAccountQuantity =
+                allocationDetailClient1CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient1DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient1CustodianDematAccountQuantity);
 
-        assertEquals(allocationDetailClient2ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient2CustodianBankAccount.getBalance());
         double allocationDetailClient2DematAccountQuantity =
-                allocationDetailClient2DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient2CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient2DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient2DematAccountQuantity);
 
-        assertEquals(allocationDetailClient3ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient3CustodianBankAccount.getBalance());
         double allocationDetailClient3DematAccountQuantity =
-                allocationDetailClient3DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient3CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient3DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient3DematAccountQuantity);
 
-        assertEquals(allocationDetailClient4ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient4CustodianBankAccount.getBalance());
         double allocationDetailClient4DematAccountQuantity =
-                allocationDetailClient4DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient4CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient4DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient4DematAccountQuantity);
 
-        assertEquals(allocationDetailClient5ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient5CustodianBankAccount.getBalance());
         double allocationDetailClient5DematAccountQuantity =
-                allocationDetailClient5DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient5CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient5DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient5DematAccountQuantity);
 
-        assertEquals(allocationDetailClient6ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient6CustodianBankAccount.getBalance());
         double allocationDetailClient6DematAccountQuantity =
-                allocationDetailClient6DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient6CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient6DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient6DematAccountQuantity);
 
-        assertEquals(allocationDetailClient7ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient7CustodianBankAccount.getBalance());
         double allocationDetailClient7DematAccountQuantity =
-                allocationDetailClient7DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient7CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient7DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient7DematAccountQuantity);
 
-        assertEquals(allocationDetailClient8ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient8CustodianBankAccount.getBalance());
         double allocationDetailClient8DematAccountQuantity =
-                allocationDetailClient8DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient8CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient8DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient8DematAccountQuantity);
 
-        assertEquals(allocationDetailClient9ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient9CustodianBankAccount.getBalance());
         double allocationDetailClient9DematAccountQuantity =
-                allocationDetailClient9DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient9CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient9DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient9DematAccountQuantity);
 
-        assertEquals(allocationDetailClient10ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient10CustodianBankAccount.getBalance());
         double allocationDetailClient10DematAccountQuantity =
-                allocationDetailClient10DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient10CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient10DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient10DematAccountQuantity);
 
-        assertEquals(allocationDetailClient11ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient11CustodianBankAccount.getBalance());
         double allocationDetailClient11DematAccountQuantity =
-                allocationDetailClient11DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient11CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient11DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient11DematAccountQuantity);
 
-        assertEquals(allocationDetailClient12ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient12CustodianBankAccount.getBalance());
         double allocationDetailClient12DematAccountQuantity =
-                allocationDetailClient12DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient12CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient12DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient12DematAccountQuantity);
 
-        assertEquals(allocationDetailClient13ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient13CustodianBankAccount.getBalance());
         double allocationDetailClient13DematAccountQuantity =
-                allocationDetailClient13DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient13CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient13DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient13DematAccountQuantity);
 
-        assertEquals(allocationDetailClient14ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient14CustodianBankAccount.getBalance());
         double allocationDetailClient14DematAccountQuantity =
-                allocationDetailClient14DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient14CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient14DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient14DematAccountQuantity);
 
-        assertEquals(allocationDetailClient15ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, allocationDetailClient15CustodianBankAccount.getBalance());
         double allocationDetailClient15DematAccountQuantity =
-                allocationDetailClient15DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient15CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient15DematAccountQuantity, 100);
+        assertEquals(100, allocationDetailClient15DematAccountQuantity);
 
 
-        assertEquals(institutionalClient2ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, sellerInstitutionalClientCustodianBankAccount.getBalance());
         double institutionalClient2DematAccountQuantity =
-                institutionalClient2DematAccount.getInstrumentQuantityPairs()
+                sellerInstitutionalClientCustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(institutionalClient2DematAccountQuantity, 0);
+        assertEquals(0, institutionalClient2DematAccountQuantity);
 
-        assertEquals(allocationDetailClient16ClearingBankAccount.getBalance(), 5000);
+        assertEquals(5000, allocationDetailClient16CustodianBankAccount.getBalance());
         double allocationDetailClient16DematAccountQuantity =
-                allocationDetailClient16DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient16CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient16DematAccountQuantity, 0);
+        assertEquals(0, allocationDetailClient16DematAccountQuantity);
 
-        assertEquals(allocationDetailClient17ClearingBankAccount.getBalance(), 5000);
+        assertEquals(5000, allocationDetailClient17CustodianBankAccount.getBalance());
         double allocationDetailClient17DematAccountQuantity =
-                allocationDetailClient17DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient17CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient17DematAccountQuantity, 0);
+        assertEquals(0, allocationDetailClient17DematAccountQuantity);
 
-        assertEquals(allocationDetailClient18ClearingBankAccount.getBalance(), 5000);
+        assertEquals(5000, allocationDetailClient18CustodianBankAccount.getBalance());
         double allocationDetailClient18DematAccountQuantity =
-                allocationDetailClient18DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient18CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient18DematAccountQuantity, 0);
+        assertEquals(0, allocationDetailClient18DematAccountQuantity);
 
-        assertEquals(allocationDetailClient19ClearingBankAccount.getBalance(), 5000);
+        assertEquals(5000, allocationDetailClient19CustodianBankAccount.getBalance());
         double allocationDetailClient19DematAccountQuantity =
-                allocationDetailClient19DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient19CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient19DematAccountQuantity, 0);
+        assertEquals(0, allocationDetailClient19DematAccountQuantity);
 
-        assertEquals(allocationDetailClient20ClearingBankAccount.getBalance(), 5000);
+        assertEquals(5000, allocationDetailClient20CustodianBankAccount.getBalance());
         double allocationDetailClient20DematAccountQuantity =
-                allocationDetailClient20DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient20CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient20DematAccountQuantity, 0);
+        assertEquals(0, allocationDetailClient20DematAccountQuantity);
 
-        assertEquals(allocationDetailClient21ClearingBankAccount.getBalance(), 5000);
+        assertEquals(5000, allocationDetailClient21CustodianBankAccount.getBalance());
         double allocationDetailClient21DematAccountQuantity =
-                allocationDetailClient21DematAccount.getInstrumentQuantityPairs()
+                allocationDetailClient21CustodianDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(allocationDetailClient21DematAccountQuantity, 0);
+        assertEquals(0, allocationDetailClient21DematAccountQuantity);
 
 
-        assertEquals(broker1ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, broker1ClearingBankAccount.getBalance());
         double broker1DematAccountQuantity =
                 broker1DematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(broker1DematAccountQuantity, 0);
+        assertEquals(0, broker1DematAccountQuantity);
 
-        assertEquals(broker2ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, broker2ClearingBankAccount.getBalance());
         double broker2DematAccountQuantity =
                 broker2DematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(broker2DematAccountQuantity, 0);
+        assertEquals(0, broker2DematAccountQuantity);
 
-        assertEquals(custodian1ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, custodian1ClearingBankAccount.getBalance());
         double custodian1DematAccountQuantity =
                 custodian1DematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(custodian1DematAccountQuantity, 0);
+        assertEquals(0, custodian1DematAccountQuantity);
 
-        assertEquals(custodian2ClearingBankAccount.getBalance(), 0);
+        assertEquals(0, custodian2ClearingBankAccount.getBalance());
         double custodian2DematAccountQuantity =
                 custodian2DematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(custodian2DematAccountQuantity, 0);
+        assertEquals(0, custodian2DematAccountQuantity);
 
-        assertEquals(clearingCorpClearingBankAccount.getBalance(), 30000);
+        assertEquals(30000, clearingCorpClearingBankAccount.getBalance());
         double clearingCorpDematAccountQuantity =
                 clearingCorpDematAccount.getInstrumentQuantityPairs()
                         .stream().filter(instrumentQuantityPair -> instrumentQuantityPair.
                         getInstrumentName().equals("MSFT")).findFirst().orElse(null).getQuantity();
-        assertEquals(clearingCorpDematAccountQuantity, 1500);
+        assertEquals(1500, clearingCorpDematAccountQuantity);
         //-------------------------------------------------------------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
         //} catch (Throwable ex) {

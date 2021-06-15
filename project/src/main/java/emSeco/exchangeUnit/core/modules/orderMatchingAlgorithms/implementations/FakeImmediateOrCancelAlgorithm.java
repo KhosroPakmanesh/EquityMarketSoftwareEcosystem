@@ -1,10 +1,10 @@
 package emSeco.exchangeUnit.core.modules.orderMatchingAlgorithms.implementations;
 
 //#if FakeImmediateOrCancelAlgorithm
-//@import stp.exchangeUnit.core.entities.order.Order;
-//@import stp.exchangeUnit.core.entities.orderBook.OrderTypeContainer;
-//@import stp.exchangeUnit.core.entities.trade.Trade;
-//@import stp.exchangeUnit.core.modules.orderMatchingAlgorithms.interfaces.IOrderMatchingAlgorithm;
+//@import emSeco.exchangeUnit.core.entities.order.Order;
+//@import emSeco.exchangeUnit.core.entities.orderBook.OrderTypeContainer;
+//@import emSeco.exchangeUnit.core.entities.trade.Trade;
+//@import emSeco.exchangeUnit.core.modules.orderMatchingAlgorithms.interfaces.IOrderMatchingAlgorithm;
 //@
 //@import java.util.ArrayList;
 //@import java.util.List;

@@ -13,10 +13,10 @@ import emSeco.brokerUnit.core.modules.bestVenueAnalysisAlgorithms.implementation
 import emSeco.brokerUnit.core.modules.bestVenueAnalysisAlgorithms.interfaces.IBestVenueAnalysisAlgorithm;
 import emSeco.brokerUnit.core.modules.broker.implementations.Broker;
 import emSeco.brokerUnit.core.modules.broker.interfaces.IBroker;
-import emSeco.brokerUnit.core.modules.brokerMoneyTransferMethods.implementations.ClearingBankAccountMoneyTransferMethod;
-import emSeco.brokerUnit.core.modules.brokerMoneyTransferMethods.implementations.BrokerInternalBankAccountMoneyTransferMethod;
-import emSeco.brokerUnit.core.modules.brokerMoneyTransferMethods.interfaces.IBrokerMoneyTransferMethod;
 import emSeco.brokerUnit.core.modules.brokerEquityTransferMethods.implementations.BrokerInternalDematAccountMoneyTransferMethod;
+import emSeco.brokerUnit.core.modules.brokerMoneyTransferMethods.implementations.BrokerInternalBankAccountMoneyTransferMethod;
+import emSeco.brokerUnit.core.modules.brokerMoneyTransferMethods.implementations.ClearingBankAccountMoneyTransferMethod;
+import emSeco.brokerUnit.core.modules.brokerMoneyTransferMethods.interfaces.IBrokerMoneyTransferMethod;
 import emSeco.brokerUnit.core.modules.brokerEquityTransferMethods.implementations.DepositoryDematAccountEquityTransferMethod;
 import emSeco.brokerUnit.core.modules.brokerEquityTransferMethods.interfaces.IBrokerEquityTransferMethod;
 import emSeco.brokerUnit.core.modules.clientComplianceRules.sharedClientComplianceRules.implementations.FakeSharedClientComplianceRuleNum1;
@@ -66,7 +66,10 @@ import emSeco.brokerUnit.core.modules.orderValidationRules.institutionalOrderVal
 import emSeco.brokerUnit.core.modules.orderValidationRules.retailOrderValidationRules.interfaces.IRetailOrderValidationRule;
 import emSeco.brokerUnit.core.modules.orderValidator.implementations.OrderValidator;
 import emSeco.brokerUnit.core.modules.orderValidator.interfaces.IOrderValidator;
-import emSeco.brokerUnit.core.modules.portfolioOptimizationAlgorithms.implementations.FakePortfolioOptimizationAlgorithmNum1;
+//#if FakePortfolioOptimizationAlgorithmNum1
+//@import emSeco.brokerUnit.core.modules.portfolioOptimizationAlgorithms.implementations.FakePortfolioOptimizationAlgorithmNum1;
+//#endif
+import emSeco.brokerUnit.core.modules.portfolioOptimizationAlgorithms.implementations.FakePortfolioOptimizationAlgorithmNum2;
 import emSeco.brokerUnit.core.modules.portfolioOptimizationAlgorithms.interfaces.IPortfolioOptimizationAlgorithm;
 import emSeco.brokerUnit.core.services.domainServices.brokerServiceRegistry.implementations.ObjectReferenceBrokerServiceRegistry;
 import emSeco.brokerUnit.core.services.domainServices.brokerServiceRegistry.interfaces.IBrokerServiceRegistry;
@@ -277,18 +280,18 @@ public class BrokerUnitConfigurations extends AbstractModule {
 
 
         //#if FakeBestVenueAnalysisAlgorithmNum1
-        bind(IBestVenueAnalysisAlgorithm.class).to(FakeBestVenueAnalysisAlgorithmNum1.class).in(Scopes.SINGLETON);
+//@        bind(IBestVenueAnalysisAlgorithm.class).to(FakeBestVenueAnalysisAlgorithmNum1.class).in(Scopes.SINGLETON);
         //#endif
         //#if FakeBestVenueAnalysisAlgorithmNum2
-        //@bind(IBestVenueAnalysisAlgorithm.class).to(FakeBestVenueAnalysisAlgorithmNum2.class).in(Scopes.SINGLETON);
+        bind(IBestVenueAnalysisAlgorithm.class).to(FakeBestVenueAnalysisAlgorithmNum2.class).in(Scopes.SINGLETON);
         //#endif
 
 
         //#if FakePortfolioOptimizationAlgorithmNum1
-        bind(IPortfolioOptimizationAlgorithm.class).to(FakePortfolioOptimizationAlgorithmNum1.class).in(Scopes.SINGLETON);
+//@        bind(IPortfolioOptimizationAlgorithm.class).to(FakePortfolioOptimizationAlgorithmNum1.class).in(Scopes.SINGLETON);
         //#endif
         //#if FakePortfolioOptimizationAlgorithmNum2
-        //@bind(IPortfolioOptimizationAlgorithm.class).to(FakePortfolioOptimizationAlgorithmNum2.class).in(Scopes.SINGLETON);
+        bind(IPortfolioOptimizationAlgorithm.class).to(FakePortfolioOptimizationAlgorithmNum2.class).in(Scopes.SINGLETON);
         //#endif
 
         bind(IContractFactory.class).to(ContractFactory.class).in(Scopes.SINGLETON);

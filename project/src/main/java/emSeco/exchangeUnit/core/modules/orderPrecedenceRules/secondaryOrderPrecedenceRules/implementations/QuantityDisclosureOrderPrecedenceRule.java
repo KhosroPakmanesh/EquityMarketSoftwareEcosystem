@@ -1,8 +1,8 @@
 package emSeco.exchangeUnit.core.modules.orderPrecedenceRules.secondaryOrderPrecedenceRules.implementations;
 
 //#if QuantityDisclosureOrderPrecedenceRule
-//@import stp.exchangeUnit.core.entities.order.Order;
-//@import stp.exchangeUnit.core.modules.orderPrecedenceRules.secondaryOrderPrecedenceRules.interfaces.ISecondaryOrderPrecedenceRule;
+//@import emSeco.exchangeUnit.core.entities.order.Order;
+//@import emSeco.exchangeUnit.core.modules.orderPrecedenceRules.secondaryOrderPrecedenceRules.interfaces.ISecondaryOrderPrecedenceRule;
 //@
 //@public class QuantityDisclosureOrderPrecedenceRule implements ISecondaryOrderPrecedenceRule {
 //@    @Override

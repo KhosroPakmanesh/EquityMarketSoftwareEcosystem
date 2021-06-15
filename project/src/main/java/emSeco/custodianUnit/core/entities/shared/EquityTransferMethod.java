@@ -8,6 +8,3 @@ public enum EquityTransferMethod {
 	depositoryDematAccount
 	//#endif   
 }
-
-
-

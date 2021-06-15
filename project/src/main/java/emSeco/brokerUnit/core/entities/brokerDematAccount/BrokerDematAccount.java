@@ -50,4 +50,8 @@ public class BrokerDematAccount {
 
         return false;
     }
+
+    public List<InstrumentQuantityPair> getInstrumentQuantityPairs() {
+        return instrumentQuantityPairs;
+    }
 }

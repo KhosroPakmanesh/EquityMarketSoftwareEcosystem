@@ -1,5 +1,6 @@
 package emSeco.custodianUnit.core.entities.custodianDematAccount;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,5 +54,9 @@ public class CustodianDematAccount {
         }
 
         return false;
+    }
+
+    public List<InstrumentQuantityPair> getInstrumentQuantityPairs() {
+        return instrumentQuantityPairs;
     }
 }

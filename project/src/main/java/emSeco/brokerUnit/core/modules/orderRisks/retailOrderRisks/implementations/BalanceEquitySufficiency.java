@@ -2,11 +2,14 @@ package emSeco.brokerUnit.core.modules.orderRisks.retailOrderRisks.implementatio
 
 //#if BalanceEquitySufficiency
 import com.google.inject.Inject;
+import emSeco.brokerUnit.core.entities.shared.EquityTransferMethod;
+import emSeco.brokerUnit.core.entities.shared.MoneyTransferMethod;
 import emSeco.brokerUnit.core.entities.shared.SideName;
 import emSeco.brokerUnit.core.entities.order.RetailOrder;
 import emSeco.brokerUnit.core.modules.orderRisks.retailOrderRisks.interfaces.IRetailOrderRisk;
 import emSeco.brokerUnit.core.services.infrastructureServices.gateways.brokerUnitApiGateways.interfaces.IBrokerUnitApiGateways;
 import emSeco.shared.architecturalConstructs.BooleanResultMessage;
+import emSeco.shared.architecturalConstructs.OperationMessage;
 
 
 public class BalanceEquitySufficiency implements IRetailOrderRisk {
@@ -18,18 +21,25 @@ public class BalanceEquitySufficiency implements IRetailOrderRisk {
     }
 
     public BooleanResultMessage ManageRisk(RetailOrder RetailOrder) {
-        if (RetailOrder.getTradingInformation().getSideName() == SideName.buy){
+
+        if (RetailOrder.getTradingInformation().getSideName() == SideName.buy &&
+            RetailOrder.getMoneyTransferMethod() != MoneyTransferMethod.brokerInternalAccount){
             return brokerUnitApiGateways.getBrokerToClearingBankUnitApiGateway()
                     .checkBalance(RetailOrder.getAccountsInformation().getClearingBankId(),
                             RetailOrder.getAccountsInformation().getClearingBankAccountNumber(),
                             RetailOrder.getTerm().getTotalPrice());
-        }else {
+
+        }else if (RetailOrder.getTradingInformation().getSideName() == SideName.sell &&
+                RetailOrder.getEquityTransferMethod() != EquityTransferMethod.brokerInternalAccount)
+        {
             return brokerUnitApiGateways.getBrokerToDepositoryUnitApiGateway()
                     .checkBalance(RetailOrder.getAccountsInformation().getDepositoryId(),
                             RetailOrder.getAccountsInformation().getDematAccountNumber(),
                             RetailOrder.getTerm().getInstrumentName(),
                             RetailOrder.getTerm().getQuantity());
         }
+
+        return new BooleanResultMessage(true, OperationMessage.emptyOperationMessage());
     }
 }
 //#endif

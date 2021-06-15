@@ -157,6 +157,7 @@
 					</and>
 				</and>
 				<alt abstract="true" mandatory="true" name="DefaultSecondaryOrderPrecedenceRules">
+					<graphics key="collapsed" value="false"/>
 					<feature name="TimeOrderPrecedenceRule"/>
 					<feature name="FakeDefaultSecondaryOrderPrecedenceRuleNum1"/>
 				</alt>

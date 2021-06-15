@@ -15,7 +15,10 @@ import emSeco.exchangeUnit.core.modules.orderMatchingAlgorithms.implementations.
 import emSeco.exchangeUnit.core.modules.orderMatchingAlgorithms.interfaces.IOrderMatchingAlgorithm;
 import emSeco.exchangeUnit.core.modules.orderPrecedenceRules.defaultSecondaryOrderPrecedenceRules.implementations.TimeOrderPrecedenceRule;
 import emSeco.exchangeUnit.core.modules.orderPrecedenceRules.defaultSecondaryOrderPrecedenceRules.interfaces.IDefaultSecondaryOrderPrecedenceRule;
-import emSeco.exchangeUnit.core.modules.orderPrecedenceRules.secondaryOrderPrecedenceRules.implementations.SmallQuantityOrderPrecedenceRule;
+//#if SmallQuantityOrderPrecedenceRule
+//@import emSeco.exchangeUnit.core.modules.orderPrecedenceRules.secondaryOrderPrecedenceRules.implementations.SmallQuantityOrderPrecedenceRule;
+//#endif
+import emSeco.exchangeUnit.core.modules.orderPrecedenceRules.secondaryOrderPrecedenceRules.implementations.LargeQuantityOrderPrecedenceRule;
 import emSeco.exchangeUnit.core.modules.orderPrecedenceRules.secondaryOrderPrecedenceRules.interfaces.ISecondaryOrderPrecedenceRule;
 import emSeco.exchangeUnit.core.modules.orderProcessor.implementations.OrderProcessor;
 import emSeco.exchangeUnit.core.modules.orderProcessor.interfaces.IOrderProcessor;
@@ -143,13 +146,13 @@ public class ExchangeUnitConfigurations extends AbstractModule {
 
 
         //#if LargeQuantityOrderPrecedenceRule
-    	//@bind(ISecondaryOrderPrecedenceRule.class).to(LargeQuantityOrderPrecedenceRule.class).in(Scopes.SINGLETON);
+    	bind(ISecondaryOrderPrecedenceRule.class).to(LargeQuantityOrderPrecedenceRule.class).in(Scopes.SINGLETON);
         //#endif
         //#if QuantityDisclosureOrderPrecedenceRule
     	//@bind(ISecondaryOrderPrecedenceRule.class).to(QuantityDisclosureOrderPrecedenceRule.class).in(Scopes.SINGLETON);
         //#endif
         //#if SmallQuantityOrderPrecedenceRule
-        bind(ISecondaryOrderPrecedenceRule.class).to(SmallQuantityOrderPrecedenceRule.class).in(Scopes.SINGLETON);
+//@        bind(ISecondaryOrderPrecedenceRule.class).to(SmallQuantityOrderPrecedenceRule.class).in(Scopes.SINGLETON);
         //#endif
 
 

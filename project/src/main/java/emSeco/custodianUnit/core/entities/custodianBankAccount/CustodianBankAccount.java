@@ -29,4 +29,8 @@ public class CustodianBankAccount {
     {
         return this.balance>= balance;
     }
+
+    public double getBalance() {
+        return balance;
+    }
 }

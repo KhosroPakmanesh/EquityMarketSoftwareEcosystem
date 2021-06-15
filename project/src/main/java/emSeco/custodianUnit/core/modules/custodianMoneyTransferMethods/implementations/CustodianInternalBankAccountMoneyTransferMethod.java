@@ -6,6 +6,7 @@ import emSeco.custodianUnit.core.entities.shared.MoneyTransferMethod;
 import emSeco.custodianUnit.core.entities.custodianBankAccount.CustodianBankAccount;
 import emSeco.custodianUnit.core.modules.custodianMoneyTransferMethods.interfaces.ICustodianMoneyTransferMethod;
 import emSeco.custodianUnit.core.services.infrastructureServices.databases.custodianUnitRepositories.interfaces.ICustodianUnitRepositories;
+import emSeco.custodianUnit.core.services.infrastructureServices.gateways.custodianUnitApiGateway.interfaces.gateways.ICustodianUnitApiGateways;
 import emSeco.shared.architecturalConstructs.BooleanResultMessage;
 import emSeco.shared.architecturalConstructs.OperationMessage;
 
@@ -13,10 +14,13 @@ import java.util.UUID;
 
 public class CustodianInternalBankAccountMoneyTransferMethod implements ICustodianMoneyTransferMethod {
     private final ICustodianUnitRepositories custodianUnitRepositories;
+    private final ICustodianUnitApiGateways custodianUnitApiGateways;
 
     @Inject
-    public CustodianInternalBankAccountMoneyTransferMethod(ICustodianUnitRepositories custodianUnitRepositories) {
+    public CustodianInternalBankAccountMoneyTransferMethod(ICustodianUnitRepositories custodianUnitRepositories,
+                                                           ICustodianUnitApiGateways custodianUnitApiGateways) {
         this.custodianUnitRepositories = custodianUnitRepositories;
+        this.custodianUnitApiGateways = custodianUnitApiGateways;
     }
 
     @Override
@@ -30,17 +34,13 @@ public class CustodianInternalBankAccountMoneyTransferMethod implements ICustodi
              UUID clientClearingBankId, UUID clientClearingBankAccountNumber,
              UUID custodianInternalBankAccountNumber,UUID clientInternalBankAccountNumber,
              double totalPrice) {
-
-        CustodianBankAccount custodianBankAccount = custodianUnitRepositories.
-                getCustodianBankAccountRepository().get(custodianInternalBankAccountNumber);
-
         CustodianBankAccount clientCustodianBankAccount = custodianUnitRepositories.
                 getCustodianBankAccountRepository().get(clientInternalBankAccountNumber);
 
-        if (custodianBankAccount == null || clientCustodianBankAccount == null) {
+        if (clientCustodianBankAccount == null) {
             return new BooleanResultMessage
                     (false, OperationMessage.
-                            Create("One or both of clearing bank accounts were not found!"));
+                            Create("Client's custodian bank accounts was not found!"));
         }
 
         Boolean hasEnoughBalance = clientCustodianBankAccount.
@@ -52,39 +52,38 @@ public class CustodianInternalBankAccountMoneyTransferMethod implements ICustodi
         }
 
         clientCustodianBankAccount.debit(totalPrice);
-        custodianBankAccount.credit(totalPrice);
+        BooleanResultMessage creditAccountResultMessage =
+                custodianUnitApiGateways.getCustodianToClearingBankUnitApiGateway().
+                        credit(custodianClearingBankId, custodianClearingBankAccountNumber, totalPrice);
+
+        if (!creditAccountResultMessage.getOperationResult()) {
+            return creditAccountResultMessage;
+        }
 
         return new BooleanResultMessage(true, OperationMessage.emptyOperationMessage());
     }
 
     @Override
     public BooleanResultMessage transferFromCustodianToClient
-            (UUID brokerClearingBankId, UUID brokerClearingBankAccountNumber,
+            (UUID custodianClearingBankId, UUID custodianClearingBankAccountNumber,
              UUID clientClearingBankId, UUID clientClearingBankAccountNumber,
              UUID custodianInternalBankAccountNumber, UUID clientInternalBankAccountNumber,
              double totalPrice) {
-
-        CustodianBankAccount custodianBankAccount = custodianUnitRepositories.
-                getCustodianBankAccountRepository().get(custodianInternalBankAccountNumber);
-
         CustodianBankAccount clientCustodianBankAccount = custodianUnitRepositories.
                 getCustodianBankAccountRepository().get(clientInternalBankAccountNumber);
 
-        if (custodianBankAccount == null || clientCustodianBankAccount == null) {
+        if (clientCustodianBankAccount == null) {
             return new BooleanResultMessage
                     (false, OperationMessage.
-                            Create("One or both of clearing bank accounts were not found!"));
+                            Create("Client's custodian bank accounts was not found!"));
         }
+        BooleanResultMessage debitAccountResultMessage =
+                custodianUnitApiGateways.getCustodianToClearingBankUnitApiGateway().
+                        debit(custodianClearingBankId, custodianClearingBankAccountNumber, totalPrice);
 
-        Boolean hasEnoughBalance = custodianBankAccount.
-                HasEnoughBalance(totalPrice);
-        if (!hasEnoughBalance) {
-            return new BooleanResultMessage
-                    (false, OperationMessage.
-                            Create("The client does not have enough balance!"));
+        if (!debitAccountResultMessage.getOperationResult()) {
+            return debitAccountResultMessage;
         }
-
-        custodianBankAccount.debit(totalPrice);
         clientCustodianBankAccount.credit(totalPrice);
 
         return new BooleanResultMessage(true, OperationMessage.emptyOperationMessage());

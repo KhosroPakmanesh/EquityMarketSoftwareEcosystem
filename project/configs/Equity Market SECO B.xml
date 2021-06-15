@@ -20,11 +20,11 @@
 	<feature manual="selected" name="CustodianInternalDematAccountMoneyTransferMethod"/>
 	<feature automatic="selected" name="Broker"/>
 	<feature automatic="selected" name="PortfolioOptimizationAlgorithms"/>
-	<feature manual="selected" name="FakePortfolioOptimizationAlgorithmNum1"/>
-	<feature automatic="unselected" name="FakePortfolioOptimizationAlgorithmNum2"/>
+	<feature automatic="unselected" name="FakePortfolioOptimizationAlgorithmNum1"/>
+	<feature manual="selected" name="FakePortfolioOptimizationAlgorithmNum2"/>
 	<feature automatic="selected" name="BestVenueAnalysisAlgorithms"/>
-	<feature manual="selected" name="FakeBestVenueAnalysisAlgorithmNum1"/>
-	<feature automatic="unselected" name="FakeBestVenueAnalysisAlgorithmNum2"/>
+	<feature automatic="unselected" name="FakeBestVenueAnalysisAlgorithmNum1"/>
+	<feature manual="selected" name="FakeBestVenueAnalysisAlgorithmNum2"/>
 	<feature automatic="selected" name="ClientsOrderTypes"/>
 	<feature automatic="selected" name="LimitPriceOrder"/>
 	<feature manual="selected" name="MarketPriceOrder"/>
@@ -90,7 +90,7 @@
 	<feature automatic="selected" name="BrokerAllocationDetailsAgreement"/>
 	<feature automatic="selected" name="BrokerTradesAndAllocationDetailsTotalPriceMatching"/>
 	<feature automatic="selected" name="Exchange"/>
-	<feature manual="selected" name="ExchangeOrderValidationRules"/>
+	<feature automatic="selected" manual="selected" name="ExchangeOrderValidationRules"/>
 	<feature automatic="selected" name="ExchangeInstitutionalOrderValidationRules"/>
 	<feature automatic="selected" name="ExchangeInstitutionalOrderRoutingInformationValidation"/>
 	<feature automatic="selected" name="ExchangeInstitutionalOrderTradingInformationValidation"/>
@@ -106,8 +106,8 @@
 	<feature automatic="unselected" name="FakeDefaultSecondaryOrderPrecedenceRuleNum1"/>
 	<feature automatic="selected" name="SecondaryOrderPrecedenceRules"/>
 	<feature automatic="unselected" name="QuantityDisclosureOrderPrecedenceRule"/>
-	<feature manual="selected" name="SmallQuantityOrderPrecedenceRule"/>
-	<feature automatic="unselected" name="LargeQuantityOrderPrecedenceRule"/>
+	<feature automatic="unselected" name="SmallQuantityOrderPrecedenceRule"/>
+	<feature manual="selected" name="LargeQuantityOrderPrecedenceRule"/>
 	<feature automatic="selected" name="OrderMatchingAlgorithms"/>
 	<feature automatic="selected" name="LimitPriceOrderAlgorithm"/>
 	<feature automatic="selected" name="MarketPriceOrderAlgorithm"/>
